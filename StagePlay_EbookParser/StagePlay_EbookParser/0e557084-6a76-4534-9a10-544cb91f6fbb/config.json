@@ -1,0 +1,32 @@
+﻿{
+  "play": {
+    "meta": {
+      "title": "Lady Windermere's Fan",
+      "author": "Oscar Wilde",
+      "language": "us-EN",
+      "genre": "Comedy",
+      "published": "1893 (according to Wikipedia)",
+      "length": "1hr 39mins",
+      "summary": "Lady Windermere's Fan is a four-act comedy by Oscar Wilde, first produced 22 February 1892 at the St James's Theatre in London. The play was first published in 1893. Like many of Wilde's comedies, it bitingly satirises the morals of Victorian society, particularly marriage. (Wikipedia)"
+    },
+    "actors": {
+      "actor": {
+        "id": "LADY WINDERMERE.",
+        "deck": {
+          "image": [
+            "stickfigure.001.svg",
+            "stickfigure.002.svg",
+            "stickfigure.003.svg",
+            "stickfigure.004.svg",
+            "stickfigure.005.svg",
+            "stickfigure.006.svg",
+            "stickfigure.007.svg",
+            "stickfigure.008.svg",
+            "stickfigure.009.svg",
+            "stickfigure.010.svg"
+          ]
+        }
+      }
+    }
+  }
+}

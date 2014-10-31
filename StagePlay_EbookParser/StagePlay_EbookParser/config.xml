@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<play>
+  <meta>
+    <title>Lady Windermere's Fan</title>
+    <author>Oscar Wilde</author>
+    <language>us-EN</language>
+    <genre>Comedy</genre>
+    <published>1893 (according to Wikipedia)</published>
+    <length>1hr 39mins</length>
+    <summary>Lady Windermere's Fan is a four-act comedy by Oscar Wilde, first produced 22 February 1892 at the St James's Theatre in London. The play was first published in 1893. Like many of Wilde's comedies, it bitingly satirises the morals of Victorian society, particularly marriage. (Wikipedia)</summary>
+  </meta>
+  <actors>
+    <!-- NOTE: Every actor is given the default deck unless their name appears below with a custom deck-->
+    <actor>
+      <id>LADY WINDERMERE.</id>
+      <!-- We could put more meta data about the actor here, such as gender, what color to use for the stick figure etc. -->
+      <deck>
+        <!-- This is a way to give custom images to a certain actor -->
+        <image>stickfigure.001.svg</image>
+        <image>stickfigure.002.svg</image>
+        <image>stickfigure.003.svg</image>
+        <image>stickfigure.004.svg</image>
+        <image>stickfigure.005.svg</image>
+        <image>stickfigure.006.svg</image>
+        <image>stickfigure.007.svg</image>
+        <image>stickfigure.008.svg</image>
+        <image>stickfigure.009.svg</image>
+        <image>stickfigure.010.svg</image>
+      </deck>
+    </actor>
+  </actors>
+</play>
