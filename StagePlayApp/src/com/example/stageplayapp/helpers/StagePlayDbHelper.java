@@ -147,6 +147,33 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public ArrayList<PlayConfig> getAllPlayConfigs()
+	{
+		ArrayList<PlayConfig> plays = new ArrayList<PlayConfig>();
+				
+		SQLiteDatabase db = this.getReadableDatabase();
+		String playQuery = String.format("select * from %s", 
+				TABLE_PLAYCONFIGS);
+		Cursor cursor = db.rawQuery(playQuery, null);
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
+		{
+			PlayConfig config = new PlayConfig();
+			config.setId(cursor.getString(0));
+			config.setName(cursor.getString(1));
+			config.setAuthor(cursor.getString(2));
+			config.setLanguage(cursor.getString(3));
+			config.setGenre(cursor.getString(4));
+			config.setPublished(cursor.getString(5));
+			config.setSummary(cursor.getString(6));
+			plays.add(config);
+		}
+		
+		cursor.close();
+		db.close();
+		
+		return plays;
+	}
+	
 	public PlayConfig getPlayConfig(String playId)
 	{
 		PlayConfig config = new PlayConfig();
