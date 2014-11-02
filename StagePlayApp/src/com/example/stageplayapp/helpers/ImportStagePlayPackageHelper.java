@@ -33,7 +33,7 @@ public class ImportStagePlayPackageHelper {
 		this.outputDir = outputDir;
 		
 		if(outputDir==null || outputDir.length()==0)
-			outputDir = context.getCacheDir().getAbsolutePath();
+			this.outputDir = context.getCacheDir().getAbsolutePath();
 	}
 	
 	public StagePlayZipContents deflateZipFile(String zipFile)
@@ -61,8 +61,8 @@ public class ImportStagePlayPackageHelper {
 	public StagePlayConfigFile getStagePlayConfigFile(StagePlayZipContents contents)
 	{
 		StagePlayConfigFile config = new StagePlayConfigFile();
-		String configFilePath = outputDir + File.pathSeparator + contents.getSubDirName() + File.pathSeparator + StagePlayZipContents.CONFIG_FILENAME;
-		File configFile = new File(configFilePath);
+		String configFilePath = outputDir + File.separator + contents.getSubDirName() + File.separator + StagePlayZipContents.CONFIG_FILENAME;
+		File configFile = new File("@"+configFilePath);
 		
 		if(configFile.exists())
 		{
@@ -230,9 +230,7 @@ public class ImportStagePlayPackageHelper {
 					files.add(innerFileName);
 					
 					FileOutputStream fout = new FileOutputStream(outputLocation 
-																	+ File.pathSeparator 
-																	+ subDirName 
-																	+ File.pathSeparator 
+																	+ File.separator 
 																	+ innerFileName);
 					for(int c = zin.read(); c!=-1; c=zin.read())
 					{
@@ -264,7 +262,7 @@ public class ImportStagePlayPackageHelper {
 	
 	private void createDir(String dir, String outputLocation)
 	{
-		File f = new File(outputLocation + File.pathSeparator + dir);
+		File f = new File(outputLocation + File.separator + dir);
 		if(!f.isDirectory())
 			f.mkdirs();
 	}
