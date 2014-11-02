@@ -184,6 +184,9 @@ public class ImportStagePlayPackageHelper {
 						d.setActorName(actor);
 						d.setText(text);
 						dialogues.add(d);
+						
+						if(actorSeqId> 0 && actor!=null && actor.length()>0 && !actors.containsKey(actor))
+							actors.put(actor, actor);
 					}
 				}
 				reader.close();
