@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class StagePlayZipContents {
 	
-	private static final String CONFIG_FILENAME = "config.json";
-	private static final String CONFIG_PLAYFILE = "config.playfile";
+	public static final String CONFIG_FILENAME = "config.json";
+	public static final String CONFIG_PLAYFILE = "config.playfile";
 	
 	private boolean hasErrors;
 	private String errorMessage;

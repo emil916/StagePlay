@@ -1,16 +1,25 @@
 package com.example.stageplayapp.helpers;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
 
 import android.content.Context;
+import android.provider.MediaStore.Files;
 import android.util.Log;
 
 public class ImportStagePlayPackageHelper {
@@ -29,6 +38,7 @@ public class ImportStagePlayPackageHelper {
 	
 	public StagePlayZipContents deflateZipFile(String zipFile)
 	{
+		//TODO: Do this via async task
 		StagePlayZipContents contents = getUnzippedContents(zipFile, outputDir);
 		if(contents.getHasErrors())	
 			{
@@ -45,29 +55,150 @@ public class ImportStagePlayPackageHelper {
 			return contents;
 		}
 		
-		//PlayConfig playConfig = getPlayConfig(contents);
-		//ArrayList<Dialogue> dialogues = getDialogues(contents);
-				
-		// TODO: Change this to reflect actual result
-		// null or empty means import went ok...otherwise hte string returned should be the error msg
 		return contents; 
 	}
 	
-	public PlayConfig getPlayConfig(StagePlayZipContents contents)
+	public StagePlayConfigFile getStagePlayConfigFile(StagePlayZipContents contents)
 	{
-		PlayConfig config = new PlayConfig();
+		StagePlayConfigFile config = new StagePlayConfigFile();
+		String configFilePath = outputDir + File.pathSeparator + contents.getSubDirName() + File.pathSeparator + StagePlayZipContents.CONFIG_FILENAME;
+		File configFile = new File(configFilePath);
 		
-		//TODO:
+		if(configFile.exists())
+		{
+			StringBuilder contentStr = new StringBuilder();
+			String line;
+			try{
+				BufferedReader reader = new BufferedReader(new FileReader(configFile));
+				while((line = reader.readLine())!=null)
+				{
+					contentStr.append(line).append('\n');
+				}
+				reader.close();
+			}
+			catch(IOException ioe)
+			{
+				Log.i(TAG, ioe.getMessage() + ioe.getStackTrace());
+			}
+			
+			Log.i(TAG, "Read config file...parsing JSON");
+			
+			try{
+				JSONObject jsonObj = new JSONObject(contentStr.toString());
+				if(jsonObj.has("play"))
+				{
+					JSONObject playObj = (JSONObject)jsonObj.get("play");
+					if(playObj.has("meta"))
+					{
+						JSONObject metaObj = (JSONObject)playObj.get("meta");
+						if(metaObj.has("title"))
+							config.setTitle(metaObj.getString("title"));
+						if(metaObj.has("author"))
+							config.setAuthor(metaObj.getString("author"));
+						if(metaObj.has("language"))
+							config.setLanguage(metaObj.getString("language"));
+						if(metaObj.has("genre"))
+							config.setGenre(metaObj.getString("genre"));
+						if(metaObj.has("published"))
+							config.setPublished(metaObj.getString("published"));
+						if(metaObj.has("summary"))
+							config.setSummary(metaObj.getString("summary"));
+					}
+					
+					if(playObj.has("actors"))
+					{
+						JSONObject actorsObj = (JSONObject)playObj.get("actors");
+						HashMap<String, ArrayList<String>> actors = new HashMap<String, ArrayList<String>>();
+						if(actorsObj.has("actor"))
+						{
+							JSONArray actorArray = actorsObj.getJSONArray("actor");
+							for(int i=0; i<actorArray.length();i++)
+							{
+								JSONObject a =  actorArray.getJSONObject(i);
+								String id = a.getString("id");
+								ArrayList<String> images = new ArrayList<String>();
+								
+								if(a.has("deck"))
+								{
+									JSONObject deckObj = (JSONObject)a.get("deck");
+									if(deckObj.has("image"))
+									{
+										JSONArray imageArray = deckObj.getJSONArray("image");
+										//FilenameUtils.getExtension()
+										for(int j=0; j<imageArray.length();j++)
+										{
+											String image = imageArray.getString(j);
+											images.add(image);
+										}
+									}
+								}
+								
+								if(images.size()>0 && id!=null && id.length()>0 && !actors.containsKey(id))
+								{
+									actors.put(id, images);
+								}
+							}
+						}
+						
+						config.setActors(actors);
+					}
+				}
+			}
+			catch(JSONException jex)
+			{
+				Log.i(TAG, jex.getMessage() + jex.getStackTrace());
+				return null;
+			}
+		}
 		
 		return config;
 	}
 	
-	public ArrayList<Dialogue> getDialogues(StagePlayZipContents contents)
+	public StagePlayDialoguesFile getStagePlayDialoguesFile(StagePlayZipContents contents)
 	{
 		ArrayList<Dialogue> dialogues = new ArrayList<Dialogue>();
+		HashMap<String, String> actors = new HashMap<String, String>();
 		
-		//TODO:
-		return dialogues;		
+		String playId = contents.getSubDirName();
+		String dialoguesFilePath = outputDir + File.pathSeparator + contents.getSubDirName() + File.pathSeparator + StagePlayZipContents.CONFIG_PLAYFILE;
+		File dialoguesFile = new File(dialoguesFilePath);
+		
+		if(dialoguesFile.exists())
+		{
+			String line;
+			try{
+				BufferedReader reader = new BufferedReader(new FileReader(dialoguesFile));
+				while((line = reader.readLine())!=null)
+				{
+					if(line!=null && line.trim().length()>0)
+					{					
+						String[] parts = line.split("\\|");
+						int dialogueId = Integer.parseInt(parts[0]);
+						int actorSeqId = Integer.parseInt(parts[1]);
+						String actor = parts[2];
+						String text = parts[3];
+						Dialogue d = new Dialogue();
+						d.setPlayId(playId);
+						d.setDialogueId(dialogueId);
+						d.setActorSeqId(actorSeqId);
+						d.setActorName(actor);
+						d.setText(text);
+						dialogues.add(d);
+					}
+				}
+				reader.close();
+			}
+			catch(IOException ioe)
+			{
+				Log.i(TAG, ioe.getMessage() + ioe.getStackTrace());
+			}
+		}		
+		
+		StagePlayDialoguesFile spDialoguesFile = new StagePlayDialoguesFile();
+		spDialoguesFile.setDialogues(dialogues);
+		spDialoguesFile.setActors(actors);
+		
+		return spDialoguesFile;		
 	}
 	
 	
@@ -124,6 +255,11 @@ public class ImportStagePlayPackageHelper {
 		}
 		
 		return contents; // TODO: Change this to reflect actual result
+	}
+	
+	//public byte[] getRawFile(String fileName)
+	{
+		
 	}
 	
 	private void createDir(String dir, String outputLocation)
