@@ -1,9 +1,9 @@
 package com.example.stageplayapp;
 
-import com.example.stageplayapp.helpers.ImportStagePlayPackageHelper;
+import java.io.File;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,13 +13,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+
+import com.example.stageplayapp.helpers.ImportStagePlayPackageHelper;
+import com.example.stageplayapp.helpers.StagePlayConfigFile;
+import com.example.stageplayapp.helpers.StagePlayDialoguesFile;
+import com.example.stageplayapp.helpers.StagePlayZipContents;
 
 public class ImporterActivity extends Activity {
 	private static final String TAG = "ImporterActivity";
 	private static final int READ_REQUEST_CODE = 42;
 	Button btn_pick;
 	ImportStagePlayPackageHelper ispph;
+	TextView tv_playTitle, tv_author;
 	
 	
 	@Override
@@ -27,56 +35,63 @@ public class ImporterActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_importer);
 		
-//		btn_pick = (Button)findViewById(R.id.button_pick);
+		tv_playTitle = (TextView)findViewById(R.id.tv_ai_playTitle);
+		tv_author = (TextView)findViewById(R.id.tv_ai_author);
+		btn_pick = (Button)findViewById(R.id.button_pickFile);
 		
 		ispph = new ImportStagePlayPackageHelper(this, null);
 		btn_pick.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {		
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT); 
+//				Intent intent = new Intent(Intent.ACTION_GET_CONTENT); 
 				
-			    // Search for all documents available via installed storage providers
-			    intent.setType("*/*"); 
-			    
-			    // Filter to only show results that can be "opened", such as a
-			    // file (as opposed to a list of contacts or timezones)
-			    intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-			    try {
-			        startActivityForResult(
-			                Intent.createChooser(intent, "Select a ZIP File"),
-			                READ_REQUEST_CODE);
-			    } catch (android.content.ActivityNotFoundException ex) {
-			        // Potentially direct the user to the Market with a Dialog
-			        Toast.makeText(ImporterActivity.this, "Please install a File Manager.", 
-			                Toast.LENGTH_SHORT).show();
-			    }
+				FileChooserDialog dialog = new FileChooserDialog(ImporterActivity.this);
+				// Assign listener for the select event.
+	    		dialog.addListener(ImporterActivity.this.onFileSelectedListener);
+	    		dialog.setTitle("Select a ZIP File");
+	    		dialog.setFilter(".*zip");
+				 dialog.show();
 				
 			}
 		});
 	}
+	
+	private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
+		public void onFileSelected(Dialog source, File file) {
+			source.hide();
+			Toast toast = Toast.makeText(ImporterActivity.this, "File selected: " + file.getAbsolutePath(), Toast.LENGTH_LONG);
+			toast.show();
+			
+			fetchFromDialog(file.getAbsolutePath());
+		}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode,
-	        Intent data) {
+		@Override
+		public void onFileSelected(Dialog source, File folder, String name) {
+			// This is for folder selection. Should be left empty
+			
+		}
+	};
 
-	    if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-	        if (data != null) {	            
-	         // Get the Uri of the selected file 
-	            Uri uri = data.getData();
-	            Log.d(TAG, "File Uri: " + uri.toString());
-	            
-	            // Get the path
-	            String path = uri.getPath();
-	            Log.d(TAG, "File Path: " + path);
-	            ispph.deflateZipFile(path);
-	            
-	            // do here
-	        }
-	    }
-	    super.onActivityResult(requestCode, resultCode, data);
+
+	private void fetchFromDialog(String filePath) {
+		// Get the path
+        Log.d(TAG, "File Path: " + filePath);
+        StagePlayZipContents zipContents = ispph.deflateZipFile(filePath);
+        
+        StagePlayConfigFile playConfig = ispph.getStagePlayConfigFile(zipContents);
+        String playTitle = playConfig.getTitle();
+        tv_playTitle.setText(playTitle);
+        String author = playConfig.getAuthor();
+        tv_author.setText(author);
+        String genre = playConfig.getGenre();
+        String language = playConfig.getLanguage();
+        String summary = playConfig.getSummary();
+        
+        StagePlayDialoguesFile dialogues = ispph.getStagePlayDialoguesFile(zipContents);
 	}
+	
+
 	
 	
 	@Override
