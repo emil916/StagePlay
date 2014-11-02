@@ -4,5 +4,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <!-- When we show the name of the play, we should also include year in brackets IF year is present -->
+	 <TextView
+        android:id="@+id/tv_playdetails_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name of play"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
+	 <TextView 
+	     android:id="@+id/tv_playdetails_author"
+	     android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Author"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+	     />
+
+	 <!-- Genre and language both included in here -->
+	 <TextView 
+	     android:id="@+id/tv_playdetails_other"
+	     android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Genre"
+         android:textAppearance="?android:attr/textAppearanceSmall"
+	     />
+	 
+	 <TextView 
+	     android:id="@+id/tv_playdetails_summary"
+	     android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Summary"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+	     />
+	 
 </LinearLayout>
