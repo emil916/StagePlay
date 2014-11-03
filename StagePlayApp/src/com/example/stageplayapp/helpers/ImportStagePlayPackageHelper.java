@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -19,7 +20,6 @@ import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
 
 import android.content.Context;
-import android.provider.MediaStore.Files;
 import android.util.Log;
 
 public class ImportStagePlayPackageHelper {
@@ -58,88 +58,90 @@ public class ImportStagePlayPackageHelper {
 		return contents; 
 	}
 	
-	public StagePlayConfigFile getStagePlayConfigFile(StagePlayZipContents contents)
-	{
+	public StagePlayConfigFile getStagePlayConfigFile(
+			StagePlayZipContents contents) {
 		StagePlayConfigFile config = new StagePlayConfigFile();
-		String configFilePath = outputDir + File.separator + contents.getSubDirName() + File.separator + StagePlayZipContents.CONFIG_FILENAME;
-		File configFile = new File("@"+configFilePath);
-		
-		if(configFile.exists())
-		{
+		PlayConfig pc = new PlayConfig();
+		config.setPlayId(contents.getSubDirName());
+		String configFilePath = outputDir + File.separator + contents.getSubDirName()
+				+ StagePlayZipContents.CONFIG_FILENAME;
+		File configFile = new File(configFilePath);
+
+		if (configFile.exists()) {
 			StringBuilder contentStr = new StringBuilder();
 			String line;
-			try{
+			try {
 				BufferedReader reader = new BufferedReader(new FileReader(configFile));
-				while((line = reader.readLine())!=null)
-				{
+				while ((line = reader.readLine()) != null) {
 					contentStr.append(line).append('\n');
 				}
 				reader.close();
-			}
-			catch(IOException ioe)
-			{
+			} catch (IOException ioe) {
 				Log.i(TAG, ioe.getMessage() + ioe.getStackTrace());
 			}
-			
+
 			Log.i(TAG, "Read config file...parsing JSON");
-			
-			try{
+
+			try {
 				JSONObject jsonObj = new JSONObject(contentStr.toString());
-				if(jsonObj.has("play"))
-				{
-					JSONObject playObj = (JSONObject)jsonObj.get("play");
-					if(playObj.has("meta"))
-					{
-						JSONObject metaObj = (JSONObject)playObj.get("meta");
-						if(metaObj.has("title"))
-							config.setTitle(metaObj.getString("title"));
-						if(metaObj.has("author"))
-							config.setAuthor(metaObj.getString("author"));
-						if(metaObj.has("language"))
-							config.setLanguage(metaObj.getString("language"));
-						if(metaObj.has("genre"))
-							config.setGenre(metaObj.getString("genre"));
-						if(metaObj.has("published"))
-							config.setPublished(metaObj.getString("published"));
-						if(metaObj.has("summary"))
-							config.setSummary(metaObj.getString("summary"));
+				if (jsonObj.has("play")) {
+					JSONObject playObj = (JSONObject) jsonObj.get("play");
+					if (playObj.has("meta")) {
+						JSONObject metaObj = (JSONObject) playObj.get("meta");
+						if (metaObj.has("title"))
+							pc.setName(metaObj.getString("title"));
+						if (metaObj.has("author"))
+							pc.setAuthor(metaObj.getString("author"));
+						if (metaObj.has("language"))
+							pc.setLanguage(metaObj.getString("language"));
+						if (metaObj.has("genre"))
+							pc.setGenre(metaObj.getString("genre"));
+						if (metaObj.has("published"))
+							pc.setPublished(metaObj.getString("published"));
+						if (metaObj.has("summary"))
+							pc.setSummary(metaObj.getString("summary"));
+						
+						config.setPlayConfig(pc);
 					}
-					
-					if(playObj.has("actors"))
-					{
-						JSONObject actorsObj = (JSONObject)playObj.get("actors");
+
+					if (playObj.has("actors")) {
+//						JSONArray actorsArray = playObj.getJSONArray("actors");
+						 JSONObject actorsObj = (JSONObject)playObj.get("actors");
 						HashMap<String, ArrayList<String>> actors = new HashMap<String, ArrayList<String>>();
-						if(actorsObj.has("actor"))
-						{
-							JSONArray actorArray = actorsObj.getJSONArray("actor");
-							for(int i=0; i<actorArray.length();i++)
-							{
-								JSONObject a =  actorArray.getJSONObject(i);
-								String id = a.getString("id");
+
+//						for (int i = 0; i < actorsArray.length(); i++) {
+//							JSONObject actorObj = actorsArray.getJSONObject(i);
+						
+							if (actorsObj.has("actor")) {
+								// JSONArray actorArray =
+								// actorsObj.getJSONArray("actor");
+								// for(int i=0; i<actorArray.length();i++)
+								// {
+								// JSONObject a = actorArray.getJSONObject(i);
+								JSONObject actorObj = actorsObj.getJSONObject("actor");
+								String id = actorObj.getString("id");
 								ArrayList<String> images = new ArrayList<String>();
-								
-								if(a.has("deck"))
-								{
-									JSONObject deckObj = (JSONObject)a.get("deck");
-									if(deckObj.has("image"))
-									{
+
+								if (actorObj.has("deck")) {
+									JSONObject deckObj = (JSONObject) actorObj.get("deck");
+									if (deckObj.has("image")) {
 										JSONArray imageArray = deckObj.getJSONArray("image");
-										//FilenameUtils.getExtension()
-										for(int j=0; j<imageArray.length();j++)
-										{
+										// FilenameUtils.getExtension()
+										for (int j = 0; j < imageArray.length(); j++) {
 											String image = imageArray.getString(j);
 											images.add(image);
 										}
 									}
 								}
-								
-								if(images.size()>0 && id!=null && id.length()>0 && !actors.containsKey(id))
-								{
+
+								if (images.size() > 0 && id != null	&& id.length() > 0
+										&& !actors.containsKey(id)) {
 									actors.put(id, images);
 								}
+								// }
 							}
-						}
-						
+//						}
+
 						config.setActors(actors);
 					}
 				}
@@ -157,10 +159,10 @@ public class ImportStagePlayPackageHelper {
 	public StagePlayDialoguesFile getStagePlayDialoguesFile(StagePlayZipContents contents)
 	{
 		ArrayList<Dialogue> dialogues = new ArrayList<Dialogue>();
-		HashMap<String, String> actors = new HashMap<String, String>();
+		HashSet<String> actors = new HashSet<String>();
 		
 		String playId = contents.getSubDirName();
-		String dialoguesFilePath = outputDir + File.pathSeparator + contents.getSubDirName() + File.pathSeparator + StagePlayZipContents.CONFIG_PLAYFILE;
+		String dialoguesFilePath = outputDir + File.separator + contents.getSubDirName() + StagePlayZipContents.CONFIG_PLAYFILE;
 		File dialoguesFile = new File(dialoguesFilePath);
 		
 		if(dialoguesFile.exists())
@@ -168,10 +170,17 @@ public class ImportStagePlayPackageHelper {
 			String line;
 			try{
 				BufferedReader reader = new BufferedReader(new FileReader(dialoguesFile));
+				boolean isFirstLine = true;
+				
 				while((line = reader.readLine())!=null)
 				{
+					if (isFirstLine) {
+						// remove the UTF8 BOM byte if exists
+						line = line.replace("\ufeff", "");
+						isFirstLine = false;
+					}
 					if(line!=null && line.trim().length()>0)
-					{					
+					{			
 						String[] parts = line.split("\\|");
 						int dialogueId = Integer.parseInt(parts[0]);
 						int actorSeqId = Integer.parseInt(parts[1]);
@@ -185,8 +194,8 @@ public class ImportStagePlayPackageHelper {
 						d.setText(text);
 						dialogues.add(d);
 						
-						if(actorSeqId> 0 && actor!=null && actor.length()>0 && !actors.containsKey(actor))
-							actors.put(actor, actor);
+						if(actorSeqId>0 && actor.length()>0) 
+						       actors.add(actor);
 					}
 				}
 				reader.close();
@@ -227,18 +236,15 @@ public class ImportStagePlayPackageHelper {
 						contents.setSubDirName(subDirName);
 					}
 					createDir(subDirName, outputLocation);
-				}else
-				{
+				} else {
 					String innerFileName = ze.getName();
 					files.add(innerFileName);
 					
-					FileOutputStream fout = new FileOutputStream(outputLocation 
-																	+ File.separator 
-																	+ innerFileName);
+					FileOutputStream fout = new FileOutputStream(
+							outputLocation + File.separator	+ innerFileName);
 					for(int c = zin.read(); c!=-1; c=zin.read())
-					{
 						fout.write(c);
-					}
+
 					zin.closeEntry();
 					fout.close();
 				}
