@@ -28,13 +28,12 @@
          android:text="Genre"
          android:textAppearance="?android:attr/textAppearanceSmall"
 	     />
-	 
-	 <TextView 
+
+	 <TextView
 	     android:id="@+id/tv_playdetails_summary"
 	     android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Summary"
-         android:textAppearance="?android:attr/textAppearanceMedium"
-	     />
+	     android:layout_height="wrap_content"
+	     android:text="Summary"
+	     android:textAppearance="?android:attr/textAppearanceMedium" />
 	 
 </LinearLayout>

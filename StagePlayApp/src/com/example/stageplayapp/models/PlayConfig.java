@@ -1,5 +1,8 @@
 package com.example.stageplayapp.models;
 
+import com.example.stageplayapp.PlayDetailsActivity;
+
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -25,6 +28,7 @@ public class PlayConfig implements Parcelable{
 		genre = p.readString();
 		published = p.readString();
 		summary = p.readString();
+		
 	}
 	
 	@Override
@@ -41,13 +45,17 @@ public class PlayConfig implements Parcelable{
 	
 	public static final Parcelable.Creator<PlayConfig> CREATOR = new Parcelable.Creator<PlayConfig>() {
 		public PlayConfig createFromParcel(Parcel p) {
-			return new PlayConfig(p);
+			return null;
+		
 		}
 
 		public PlayConfig[] newArray(int size) {
 			return new PlayConfig[size];
 		}
 	};
+	
+		
+	
 
 	public void setId(String id)
 	{

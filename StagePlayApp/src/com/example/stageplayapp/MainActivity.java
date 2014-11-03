@@ -1,4 +1,5 @@
 package com.example.stageplayapp;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,21 +10,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
-	Button Resume, AllPlays, Settings, About;
+	Button btnResume, btnAllplays, btnSettings, btnAbout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Resume = (Button) findViewById(R.id.button1);
-		AllPlays = (Button) findViewById(R.id.button2);
-		Settings = (Button) findViewById(R.id.button3);
-		About = (Button) findViewById(R.id.button4);
+		btnResume = (Button) findViewById(R.id.button1);
+		btnAllplays = (Button) findViewById(R.id.button2);
+		btnSettings = (Button) findViewById(R.id.button3);
+		btnAbout = (Button) findViewById(R.id.button4);
 
 		Bundle b = new Bundle();
 		b = getIntent().getExtras();
 
-		Resume.setOnClickListener(new OnClickListener() {
+		btnResume.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -31,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 		});
-		AllPlays.setOnClickListener(new OnClickListener() {
+		btnAllplays.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 		});
-		Settings.setOnClickListener(new OnClickListener() {
+		btnSettings.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -47,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 		});
-		About.setOnClickListener(new OnClickListener() {
+		btnAbout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

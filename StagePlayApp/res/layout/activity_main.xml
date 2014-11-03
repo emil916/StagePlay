@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/bg"
+    android:background="@drawable/bg_main"
     tools:context="com.example.stageplayapp.MainActivity" >
 
     <Button
@@ -16,6 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
+        android:textColor="#FFFFFF"
         android:text="@string/resume" />
 
     <Button
@@ -25,6 +26,7 @@
         android:layout_below="@+id/button1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
+        android:textColor="#FFFFFF"
         android:text="@string/allplays" />
 
     <Button
@@ -34,6 +36,7 @@
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="46dp"
+        android:textColor="#FFFFFF"
         android:text="@string/settings" />
 
     <Button
@@ -43,5 +46,6 @@
         android:layout_below="@+id/button3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:textColor="#FFFFFF"
         android:text="@string/about" />
    </RelativeLayout>
