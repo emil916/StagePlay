@@ -27,7 +27,7 @@ public class ImporterActivity extends Activity {
 	private static final int READ_REQUEST_CODE = 42;
 	Button btn_pick;
 	ImportStagePlayPackageHelper ispph;
-	TextView tv_playTitle, tv_author;
+	TextView tv_playTitle, tv_author, tv_genre, tv_language, tv_summary;
 	
 	
 	@Override
@@ -37,6 +37,9 @@ public class ImporterActivity extends Activity {
 		
 		tv_playTitle = (TextView)findViewById(R.id.tv_ai_playTitle);
 		tv_author = (TextView)findViewById(R.id.tv_ai_author);
+		tv_genre = (TextView)findViewById(R.id.tv_ai_genre);
+		tv_language = (TextView)findViewById(R.id.tv_ai_language);
+		tv_summary = (TextView)findViewById(R.id.tv_ai_summary);
 		btn_pick = (Button)findViewById(R.id.button_pickFile);
 		
 		ispph = new ImportStagePlayPackageHelper(this, null);
@@ -51,7 +54,8 @@ public class ImporterActivity extends Activity {
 	    		dialog.addListener(ImporterActivity.this.onFileSelectedListener);
 	    		dialog.setTitle("Select a ZIP File");
 	    		dialog.setFilter(".*zip");
-				 dialog.show();
+				dialog.show();
+//	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last_test.zip");
 				
 			}
 		});
@@ -80,18 +84,15 @@ public class ImporterActivity extends Activity {
         StagePlayZipContents zipContents = ispph.deflateZipFile(filePath);
         
         StagePlayConfigFile playConfig = ispph.getStagePlayConfigFile(zipContents);
-        String playTitle = playConfig.getTitle();
-        tv_playTitle.setText(playTitle);
-        String author = playConfig.getAuthor();
-        tv_author.setText(author);
-        String genre = playConfig.getGenre();
-        String language = playConfig.getLanguage();
-        String summary = playConfig.getSummary();
-        
+
+        tv_playTitle.setText("Title - " + playConfig.getTitle());
+        tv_author.setText("Author - " + playConfig.getAuthor());
+        tv_genre.setText("Genre - " + playConfig.getGenre());
+        tv_language.setText("Language - " + playConfig.getLanguage());
+        tv_summary.setText("Summary - " + playConfig.getSummary());
+                
         StagePlayDialoguesFile dialogues = ispph.getStagePlayDialoguesFile(zipContents);
 	}
-	
-
 	
 	
 	@Override

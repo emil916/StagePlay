@@ -109,7 +109,7 @@ public class PlayConfig implements Parcelable{
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
+		// Do not edit
 		return 0;
 	}
 	

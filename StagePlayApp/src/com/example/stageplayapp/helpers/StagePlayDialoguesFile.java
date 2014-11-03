@@ -2,6 +2,10 @@ package com.example.stageplayapp.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import android.util.Log;
 
 import com.example.stageplayapp.models.Dialogue;
 
@@ -9,11 +13,11 @@ public class StagePlayDialoguesFile {
 	private final static String TAG = "StagePlayDialoguesFile";
 	
 	private ArrayList<Dialogue> dialogues = new ArrayList<Dialogue>();
-	private HashMap<String, String> actors = new HashMap<String, String>();
+	private HashSet<String> actors = new HashSet<String>();
 	
 	public StagePlayDialoguesFile()
 	{
-		
+		Log.i(TAG, "Default Constructor");
 	}
 
 	public ArrayList<Dialogue> getDialogues() {
@@ -24,11 +28,11 @@ public class StagePlayDialoguesFile {
 		this.dialogues = dialogues;
 	}
 
-	public HashMap<String, String> getActors() {
+	public HashSet<String> getActors() {
 		return actors;
 	}
 
-	public void setActors(HashMap<String, String> actors) {
-		this.actors = actors;
+	public void setActors(HashSet<String> actors2) {
+		this.actors = actors2;
 	}
 }
