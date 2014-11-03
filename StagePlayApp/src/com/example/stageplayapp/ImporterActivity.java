@@ -57,8 +57,8 @@ public class ImporterActivity extends Activity {
 	    		dialog.addListener(ImporterActivity.this.onFileSelectedListener);
 	    		dialog.setTitle("Select a ZIP File");
 	    		dialog.setFilter(".*zip");
-				dialog.show();
-//	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last_test.zip");
+//				dialog.show();
+	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last.zip");
 				
 			}
 		});
@@ -137,7 +137,7 @@ public class ImporterActivity extends Activity {
 			StagePlayDbHelper db = new StagePlayDbHelper(ImporterActivity.this);
 	        zipContents = ispph.deflateZipFile(params[0]);
 	        String currFilePlayId = zipContents.getSubDirName();
-	        if(db.getPlayConfig(currFilePlayId) == null) {
+	        if(db.getPlayConfig(currFilePlayId).getId() == null) {
 	        	db.close();
 	        	stagePlayConfigFile = ispph.getStagePlayConfigFile(zipContents);
 		        dialogues = ispph.getStagePlayDialoguesFile(zipContents);

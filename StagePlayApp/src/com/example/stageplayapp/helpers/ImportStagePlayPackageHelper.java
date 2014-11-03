@@ -65,7 +65,7 @@ public class ImportStagePlayPackageHelper {
 		PlayConfig pc = new PlayConfig();
 		pc.setId(contents.getSubDirName());
 		String configFilePath = outputDir + File.separator + contents.getSubDirName()
-				+ StagePlayZipContents.CONFIG_FILENAME;
+				+ File.separator + StagePlayZipContents.CONFIG_FILENAME;
 		File configFile = new File(configFilePath);
 
 		if (configFile.exists()) {
@@ -163,7 +163,8 @@ public class ImportStagePlayPackageHelper {
 		HashSet<String> actors = new HashSet<String>();
 		
 		String playId = contents.getSubDirName();
-		String dialoguesFilePath = outputDir + File.separator + contents.getSubDirName() + StagePlayZipContents.CONFIG_PLAYFILE;
+		String dialoguesFilePath = outputDir + File.separator + contents.getSubDirName() 
+				+ File.separator + StagePlayZipContents.CONFIG_PLAYFILE;
 		File dialoguesFile = new File(dialoguesFilePath);
 		
 		if(dialoguesFile.exists())

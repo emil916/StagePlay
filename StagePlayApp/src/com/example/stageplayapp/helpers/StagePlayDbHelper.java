@@ -182,14 +182,15 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		PlayConfig config = new PlayConfig();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String playQuery = String.format("select * from %s where %s=%s", 
+		String playQuery = String.format("select * from %s where %s=\"%s\"", 
 				TABLE_PLAYCONFIGS, 
 				COLUMN_PLAYCONFIGS_ID, 
 				playId);
 		Cursor cursor = db.rawQuery(playQuery, null);
 		
-		while(cursor.moveToFirst() && !cursor.isAfterLast())
+		if(cursor.getCount() > 0)
 		{
+			cursor.moveToFirst();
 			config.setId(cursor.getString(0));
 			config.setTitle(cursor.getString(1));
 			config.setAuthor(cursor.getString(2));
