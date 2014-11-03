@@ -1,8 +1,5 @@
 package com.example.stageplayapp.models;
 
-import com.example.stageplayapp.PlayDetailsActivity;
-
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -71,7 +68,7 @@ public class PlayConfig implements Parcelable{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setTitle(String name) {
 		this.name = name;
 	}
 

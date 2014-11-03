@@ -1,11 +1,14 @@
 package com.example.stageplayapp;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.ProgressDialog;
+import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,34 +16,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 
 import com.example.stageplayapp.helpers.ImportStagePlayPackageHelper;
 import com.example.stageplayapp.helpers.StagePlayConfigFile;
+import com.example.stageplayapp.helpers.StagePlayDbHelper;
 import com.example.stageplayapp.helpers.StagePlayDialoguesFile;
 import com.example.stageplayapp.helpers.StagePlayZipContents;
+import com.example.stageplayapp.models.Actor;
+import com.example.stageplayapp.models.Dialogue;
 
 public class ImporterActivity extends Activity {
 	private static final String TAG = "ImporterActivity";
-	private static final int READ_REQUEST_CODE = 42;
-	Button btn_pick;
+	
 	ImportStagePlayPackageHelper ispph;
-	TextView tv_playTitle, tv_author, tv_genre, tv_language, tv_summary;
+	TextView tv_info;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_importer);
-		
-		tv_playTitle = (TextView)findViewById(R.id.tv_ai_playTitle);
-		tv_author = (TextView)findViewById(R.id.tv_ai_author);
-		tv_genre = (TextView)findViewById(R.id.tv_ai_genre);
-		tv_language = (TextView)findViewById(R.id.tv_ai_language);
-		tv_summary = (TextView)findViewById(R.id.tv_ai_summary);
-		btn_pick = (Button)findViewById(R.id.button_pickFile);
+		setContentView(R.layout.activity_importer);		
+	
+		tv_info = (TextView)findViewById(R.id.tv_ai_info);
+
+		Button btn_pick = (Button)findViewById(R.id.button_ai_pickFile);
+		Button btn_ok = (Button)findViewById(R.id.button_ai_ok);
 		
 		ispph = new ImportStagePlayPackageHelper(this, null);
 		btn_pick.setOnClickListener(new OnClickListener() {
@@ -59,13 +62,21 @@ public class ImporterActivity extends Activity {
 				
 			}
 		});
+	
+		btn_ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();				
+			}
+		});
 	}
 	
 	private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
 		public void onFileSelected(Dialog source, File file) {
 			source.hide();
-			Toast toast = Toast.makeText(ImporterActivity.this, "File selected: " + file.getAbsolutePath(), Toast.LENGTH_LONG);
-			toast.show();
+//			Toast toast = Toast.makeText(ImporterActivity.this, "File selected: " + file.getAbsolutePath(), Toast.LENGTH_LONG);
+//			toast.show();
 			
 			fetchFromDialog(file.getAbsolutePath());
 		}
@@ -81,17 +92,8 @@ public class ImporterActivity extends Activity {
 	private void fetchFromDialog(String filePath) {
 		// Get the path
         Log.d(TAG, "File Path: " + filePath);
-        StagePlayZipContents zipContents = ispph.deflateZipFile(filePath);
         
-        StagePlayConfigFile playConfig = ispph.getStagePlayConfigFile(zipContents);
-
-        tv_playTitle.setText("Title - " + playConfig.getPlayConfig().getName());
-        tv_author.setText("Author - " + playConfig.getPlayConfig().getAuthor());
-        tv_genre.setText("Genre - " + playConfig.getPlayConfig().getGenre());
-        tv_language.setText("Language - " + playConfig.getPlayConfig().getLanguage());
-        tv_summary.setText("Summary - " + playConfig.getPlayConfig().getSummary());
-                
-        StagePlayDialoguesFile dialogues = ispph.getStagePlayDialoguesFile(zipContents);
+        new MyAsynchTaskFromFile().execute(filePath);
 	}
 	
 	
@@ -114,4 +116,126 @@ public class ImporterActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	StagePlayZipContents zipContents;
+	StagePlayConfigFile stagePlayConfigFile;
+	StagePlayDialoguesFile dialogues;
+	
+	private class MyAsynchTaskFromFile extends AsyncTask<String, Void, Integer> {
+		private ProgressDialog mDialog;
+		private ImageView iv;
+		
+		@Override
+		protected void onPreExecute() {
+			iv = (ImageView)findViewById(R.id.imageView1);
+		    new ProgressDialog(ImporterActivity.this);
+		    mDialog = ProgressDialog.show(ImporterActivity.this, "", "Loading from zip..");
+		    super.onPreExecute();
+		}
+		
+		@Override
+		protected Integer doInBackground(String... params) {
+			StagePlayDbHelper db = new StagePlayDbHelper(ImporterActivity.this);
+	        zipContents = ispph.deflateZipFile(params[0]);
+	        String currFilePlayId = zipContents.getSubDirName();
+	        if(db.getPlayConfig(currFilePlayId) == null) {
+	        	db.close();
+	        	stagePlayConfigFile = ispph.getStagePlayConfigFile(zipContents);
+		        dialogues = ispph.getStagePlayDialoguesFile(zipContents);
+		        	
+	        } else {
+	        	db.close();
+	        	return 1;
+	        }
+	        
+	        if (zipContents==null || stagePlayConfigFile==null ||
+	        		dialogues==null)
+	        	return 2;
+	        	
+			return 0;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) {        
+
+	        if(mDialog!=null && mDialog.isShowing()) {
+	            mDialog.dismiss();
+	        }
+	        if (result == 1) {
+	        	iv.setImageResource(R.drawable.done);
+	        	tv_info.setText("The selected file already exists in "
+	        			+ "the app database");
+	        }else if (result == 2) {
+	        	iv.setImageResource(R.drawable.error);
+	        	tv_info.setText("Something went wrong when pulling"
+	        			+ "data from the ZIP file :(");
+	        }
+	        else {
+	        	new MyAsynchTaskToDB().execute();
+	        }
+	        	
+		}
+		
+	}
+	
+	private class MyAsynchTaskToDB extends AsyncTask<Void, Void, Boolean> {
+		private ProgressDialog mDialog;
+		private ImageView iv;
+		
+		@Override
+		protected void onPreExecute() {
+			iv = (ImageView)findViewById(R.id.imageView1);
+		    new ProgressDialog(ImporterActivity.this);
+		    mDialog = ProgressDialog.show(ImporterActivity.this, "", "Loading into DB..");
+		    super.onPreExecute();
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			StagePlayDbHelper db = new StagePlayDbHelper(ImporterActivity.this);
+	        db.insertPlayConfig(stagePlayConfigFile.getPlayConfig());
+	        ListIterator<Dialogue> it1 = dialogues.getDialogues().listIterator();
+			while (it1.hasNext()) {
+				try {
+					db.insertDialogue(it1.next());
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+	        
+	        
+	        Iterator<String> it2 = dialogues.getActors().iterator();
+	        while (it2.hasNext()) {
+	        	Actor actor = new Actor();
+	        	actor.setPlayId(stagePlayConfigFile.getPlayConfig().getId());
+	        	actor.setName(it2.next());
+				try {
+					db.insertActor(actor);
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+	        
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				tv_info.setText("The selected play has been successfully "
+					+ "added into the app database");			
+				iv.setImageResource(R.drawable.done);
+			} else {
+				tv_info.setText("Something went wrong when reading the data"
+						+ "into the app database :(");
+				iv.setImageResource(R.drawable.error);
+			}
+				
+	        if(mDialog!=null && mDialog.isShowing()) {
+	            mDialog.dismiss();
+	        }
+		}
+		
+	}
 }

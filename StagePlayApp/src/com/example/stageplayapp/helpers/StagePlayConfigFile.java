@@ -1,11 +1,10 @@
 package com.example.stageplayapp.helpers;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.List;
 
-import com.example.stageplayapp.models.Actor;
+import android.util.Log;
+
 import com.example.stageplayapp.models.PlayConfig;
 
 public class StagePlayConfigFile {
@@ -18,18 +17,10 @@ public class StagePlayConfigFile {
 	
 	public StagePlayConfigFile()
 	{
-		
+		Log.i(TAG, "Default Constructor");
 	}
 	
-	public void setPlayId(String id)
-	{
-		this.playId = id;
-	}
-	
-	public String getPlayId(){
-		return this.playId;
-	}
-	
+
 	public void setPlayConfig(PlayConfig pc)
 	{
 		this.playConfig = pc;

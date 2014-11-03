@@ -2,8 +2,6 @@ package com.example.stageplayapp.helpers;
 
 import java.util.ArrayList;
 
-import com.example.stageplayapp.models.*;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,6 +9,11 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.stageplayapp.models.Actor;
+import com.example.stageplayapp.models.DeckImage;
+import com.example.stageplayapp.models.Dialogue;
+import com.example.stageplayapp.models.PlayConfig;
 
 public class StagePlayDbHelper extends SQLiteOpenHelper {
 	
@@ -98,7 +101,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 				);
 		
 		String sqlDialogues = String.format("CREATE TABLE %s " +
-				"(%s TEXT REFERENCE %s(%s), " +
+				"(%s TEXT REFERENCES %s(%s), " +
 				"%s INTEGER, " +
 				"%s INTEGER, " +
 				"%s TEXT, " +
@@ -159,7 +162,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		{
 			PlayConfig config = new PlayConfig();
 			config.setId(cursor.getString(0));
-			config.setName(cursor.getString(1));
+			config.setTitle(cursor.getString(1));
 			config.setAuthor(cursor.getString(2));
 			config.setLanguage(cursor.getString(3));
 			config.setGenre(cursor.getString(4));
@@ -188,7 +191,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		while(cursor.moveToFirst() && !cursor.isAfterLast())
 		{
 			config.setId(cursor.getString(0));
-			config.setName(cursor.getString(1));
+			config.setTitle(cursor.getString(1));
 			config.setAuthor(cursor.getString(2));
 			config.setLanguage(cursor.getString(3));
 			config.setGenre(cursor.getString(4));

@@ -17,11 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.stageplayapp.models.Dialogue;
-import com.example.stageplayapp.models.PlayConfig;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.example.stageplayapp.models.Dialogue;
+import com.example.stageplayapp.models.PlayConfig;
 
 public class ImportStagePlayPackageHelper {
 	private static final String TAG = "ImportStagePlayPackageHelper";
@@ -63,7 +63,7 @@ public class ImportStagePlayPackageHelper {
 			StagePlayZipContents contents) {
 		StagePlayConfigFile config = new StagePlayConfigFile();
 		PlayConfig pc = new PlayConfig();
-		config.setPlayId(contents.getSubDirName());
+		pc.setId(contents.getSubDirName());
 		String configFilePath = outputDir + File.separator + contents.getSubDirName()
 				+ StagePlayZipContents.CONFIG_FILENAME;
 		File configFile = new File(configFilePath);
@@ -90,7 +90,7 @@ public class ImportStagePlayPackageHelper {
 					if (playObj.has("meta")) {
 						JSONObject metaObj = (JSONObject) playObj.get("meta");
 						if (metaObj.has("title"))
-							pc.setName(metaObj.getString("title"));
+							pc.setTitle(metaObj.getString("title"));
 						if (metaObj.has("author"))
 							pc.setAuthor(metaObj.getString("author"));
 						if (metaObj.has("language"))
@@ -235,7 +235,7 @@ public class ImportStagePlayPackageHelper {
 				
 				if(ze.isDirectory())
 				{
-					subDirName = ze.getName();
+					subDirName = ze.getName().substring(0, ze.getName().length()-1);
 					if(contents.getSubDirName()==null) // we capture just the first subdir
 					{
 						contents.setSubDirName(subDirName);
