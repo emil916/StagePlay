@@ -10,12 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
  
 public class PlayDetailsActivity extends Activity{
+	public static final String PARCELSTRING_PLAYCONFIG_TO_DISPLAY = "playConfigToDisplay";
 	
 	@Override
-	public void onCreate(Bundle savedInstsanceState){
+	public void onCreate(Bundle savedInstanceState){
 		TextView name, author, genre, summary ;
 		
-		super.onCreate(savedInstsanceState);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playdetails);
 		
 		PlayConfig pconfig = getPlayConfig(getIntent());
@@ -54,7 +55,7 @@ public class PlayDetailsActivity extends Activity{
 		if(intent == null)
 			return null;
 		
-		PlayConfig pc = intent.getParcelableExtra("playConfigToDisplay");
+		PlayConfig pc = intent.getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_DISPLAY);
 		return pc;
 	}
 }
