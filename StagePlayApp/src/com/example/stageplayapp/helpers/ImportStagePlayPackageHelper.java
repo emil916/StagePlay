@@ -1,5 +1,6 @@
 package com.example.stageplayapp.helpers;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -216,6 +217,9 @@ public class ImportStagePlayPackageHelper {
 	
 	private StagePlayZipContents getUnzippedContents(String zipFile, String outputLocation)
 	{
+		byte[] buffer = new byte[2048];
+		int size;
+		
 		StagePlayZipContents contents = new StagePlayZipContents();
 		//NOTE: Code based on http://jondev.net/articles/Unzipping_Files_with_Android_%28Programmatically%29
 		try{
@@ -229,24 +233,34 @@ public class ImportStagePlayPackageHelper {
 			{
 				Log.i(TAG, "Unzipping " + ze.getName());
 				
-				if(ze.isDirectory()){
+				if(ze.isDirectory())
+				{
 					subDirName = ze.getName();
 					if(contents.getSubDirName()==null) // we capture just the first subdir
 					{
 						contents.setSubDirName(subDirName);
 					}
 					createDir(subDirName, outputLocation);
-				} else {
+				} 
+				else 
+				{
 					String innerFileName = ze.getName();
 					files.add(innerFileName);
 					
 					FileOutputStream fout = new FileOutputStream(
 							outputLocation + File.separator	+ innerFileName);
-					for(int c = zin.read(); c!=-1; c=zin.read())
-						fout.write(c);
+					BufferedOutputStream bos = new BufferedOutputStream(fout, buffer.length);
+					
+					while((size = zin.read(buffer, 0, buffer.length))!=-1)
+					{
+						bos.write(buffer, 0, size);
+					}
 
-					zin.closeEntry();
+					bos.flush();
+					bos.close();
+					fout.flush();
 					fout.close();
+					zin.closeEntry();
 				}
 			}
 			
