@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -21,7 +20,6 @@ import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
 
 import android.content.Context;
-import android.provider.MediaStore.Files;
 import android.util.Log;
 
 public class ImportStagePlayPackageHelper {
@@ -63,6 +61,8 @@ public class ImportStagePlayPackageHelper {
 	public StagePlayConfigFile getStagePlayConfigFile(
 			StagePlayZipContents contents) {
 		StagePlayConfigFile config = new StagePlayConfigFile();
+		PlayConfig pc = new PlayConfig();
+		config.setPlayId(contents.getSubDirName());
 		String configFilePath = outputDir + File.separator + contents.getSubDirName()
 				+ StagePlayZipContents.CONFIG_FILENAME;
 		File configFile = new File(configFilePath);
@@ -89,17 +89,19 @@ public class ImportStagePlayPackageHelper {
 					if (playObj.has("meta")) {
 						JSONObject metaObj = (JSONObject) playObj.get("meta");
 						if (metaObj.has("title"))
-							config.setTitle(metaObj.getString("title"));
+							pc.setName(metaObj.getString("title"));
 						if (metaObj.has("author"))
-							config.setAuthor(metaObj.getString("author"));
+							pc.setAuthor(metaObj.getString("author"));
 						if (metaObj.has("language"))
-							config.setLanguage(metaObj.getString("language"));
+							pc.setLanguage(metaObj.getString("language"));
 						if (metaObj.has("genre"))
-							config.setGenre(metaObj.getString("genre"));
+							pc.setGenre(metaObj.getString("genre"));
 						if (metaObj.has("published"))
-							config.setPublished(metaObj.getString("published"));
+							pc.setPublished(metaObj.getString("published"));
 						if (metaObj.has("summary"))
-							config.setSummary(metaObj.getString("summary"));
+							pc.setSummary(metaObj.getString("summary"));
+						
+						config.setPlayConfig(pc);
 					}
 
 					if (playObj.has("actors")) {

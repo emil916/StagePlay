@@ -85,11 +85,11 @@ public class ImporterActivity extends Activity {
         
         StagePlayConfigFile playConfig = ispph.getStagePlayConfigFile(zipContents);
 
-        tv_playTitle.setText("Title - " + playConfig.getTitle());
-        tv_author.setText("Author - " + playConfig.getAuthor());
-        tv_genre.setText("Genre - " + playConfig.getGenre());
-        tv_language.setText("Language - " + playConfig.getLanguage());
-        tv_summary.setText("Summary - " + playConfig.getSummary());
+        tv_playTitle.setText("Title - " + playConfig.getPlayConfig().getName());
+        tv_author.setText("Author - " + playConfig.getPlayConfig().getAuthor());
+        tv_genre.setText("Genre - " + playConfig.getPlayConfig().getGenre());
+        tv_language.setText("Language - " + playConfig.getPlayConfig().getLanguage());
+        tv_summary.setText("Summary - " + playConfig.getPlayConfig().getSummary());
                 
         StagePlayDialoguesFile dialogues = ispph.getStagePlayDialoguesFile(zipContents);
 	}
