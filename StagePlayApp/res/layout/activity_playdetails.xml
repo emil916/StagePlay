@@ -25,7 +25,7 @@
 	     android:id="@+id/tv_playdetails_other"
 	     android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:text="Genre"
+         android:text="Genre • Language"
          android:textAppearance="?android:attr/textAppearanceSmall"
 	     />
 
