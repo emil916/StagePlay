@@ -57,8 +57,8 @@ public class ImporterActivity extends Activity {
 	    		dialog.addListener(ImporterActivity.this.onFileSelectedListener);
 	    		dialog.setTitle("Select a ZIP File");
 	    		dialog.setFilter(".*zip");
-//				dialog.show();
-	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last.zip");
+				dialog.show();
+//	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last.zip");
 				
 			}
 		});
