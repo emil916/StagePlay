@@ -74,7 +74,7 @@ public class ImporterActivity extends Activity {
 	
 	private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
 		public void onFileSelected(Dialog source, File file) {
-			source.hide();
+			source.dismiss();
 //			Toast toast = Toast.makeText(ImporterActivity.this, "File selected: " + file.getAbsolutePath(), Toast.LENGTH_LONG);
 //			toast.show();
 			

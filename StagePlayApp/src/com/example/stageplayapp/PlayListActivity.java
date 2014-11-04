@@ -10,7 +10,7 @@ import android.widget.Button;
 
 
 public class PlayListActivity extends Activity{
-	Button btn_pickPlay;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -18,7 +18,7 @@ public class PlayListActivity extends Activity{
 		setContentView(R.layout.activity_playlist);
 		
 
-		btn_pickPlay = (Button)findViewById(R.id.button_download);
+		Button btn_pickPlay = (Button)findViewById(R.id.button_download);
 		 
 		btn_pickPlay.setOnClickListener(new OnClickListener() {
 			
