@@ -1,7 +1,7 @@
 package com.example.stageplayapp.helpers;
 
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +9,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.example.stageplayapp.models.Actor;
 import com.example.stageplayapp.models.DeckImage;
 import com.example.stageplayapp.models.Dialogue;
@@ -49,8 +48,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 	private static final String COLUMN_DIALOGUES_ACTORNAME = "actor_name";
 	private static final String COLUMN_DIALOGUES_TEXT = "text";
 	
-	public StagePlayDbHelper(Context context)
-	{
+	public StagePlayDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 	
@@ -122,8 +120,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 			db.execSQL(sqlDialogues);
 			db.execSQL(sqlDecks);
 			Log.i(TAG, "DB creation SUCCESS!");
-		}
-		catch(android.database.SQLException sqlex)
+		} catch(android.database.SQLException sqlex)
 		{
 			Log.i(TAG, "DB creation FAILED :( ...");
 			Log.e(TAG, sqlex.getMessage() + sqlex.getStackTrace());
@@ -142,24 +139,21 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		onCreate(db);
 		
 		Log.i(TAG, "DB upgrade SUCCESS");
-		}
-		catch(android.database.SQLException sqlex)
+		} catch(android.database.SQLException sqlex)
 		{
 			Log.i(TAG, "DB upgrade FAILED :( ...");
 			Log.e(TAG, sqlex.getMessage() + sqlex.getStackTrace());
 		}
 	}
 	
-	public ArrayList<PlayConfig> getAllPlayConfigs()
-	{
+	public ArrayList<PlayConfig> getAllPlayConfigs() {
 		ArrayList<PlayConfig> plays = new ArrayList<PlayConfig>();
 				
 		SQLiteDatabase db = this.getReadableDatabase();
 		String playQuery = String.format("select * from %s", 
 				TABLE_PLAYCONFIGS);
 		Cursor cursor = db.rawQuery(playQuery, null);
-		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
-		{
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()) {
 			PlayConfig config = new PlayConfig();
 			config.setId(cursor.getString(0));
 			config.setTitle(cursor.getString(1));
@@ -177,8 +171,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return plays;
 	}
 	
-	public PlayConfig getPlayConfig(String playId)
-	{
+	public PlayConfig getPlayConfig(String playId)	{
 		PlayConfig config = new PlayConfig();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -188,8 +181,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 				playId);
 		Cursor cursor = db.rawQuery(playQuery, null);
 		
-		if(cursor.getCount() > 0)
-		{
+		if(cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			config.setId(cursor.getString(0));
 			config.setTitle(cursor.getString(1));
@@ -206,19 +198,17 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return config;
 	}
 	
-	public ArrayList<Actor> getActors(String playId)
-	{
+	public ArrayList<Actor> getActors(String playId) {
 		ArrayList<Actor> actors = new ArrayList<Actor>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String actorsQuery = String.format("select * from %s where %s=%s", 
+		String actorsQuery = String.format("select * from %s "
+				+ "where %s=\"%s\"", 
 				TABLE_ACTORS, 
-				COLUMN_ACTORS_PLAYID, 
-				DatabaseUtils.sqlEscapeString(playId));
+				COLUMN_ACTORS_PLAYID, DatabaseUtils.sqlEscapeString(playId));
 		Cursor cursor = db.rawQuery(actorsQuery, null);
 		
-		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
-		{
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())	{
 			Actor actor = new Actor();
 			actor.setPlayId(cursor.getString(0));
 			actor.setName(cursor.getString(1));
@@ -231,21 +221,18 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return actors;
 	}
 	
-	public ArrayList<DeckImage> getDeckImages(String playId, String actorName)
-	{
+	public ArrayList<DeckImage> getDeckImages(String playId, String actorName){
 		ArrayList<DeckImage> deckImages = new ArrayList<DeckImage>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String deckQuery = String.format("select * from %s where %s=%s and %s=%s", 
+		String deckQuery = String.format("select * from %s "
+				+ "where %s=\"%s\" and %s=\"%s\"", 
 				TABLE_DECKS, 
-				COLUMN_DECKS_PLAYID, 
-				DatabaseUtils.sqlEscapeString(playId),
-				COLUMN_DECKS_ACTORNAME,
-				DatabaseUtils.sqlEscapeString(actorName));
+				COLUMN_DECKS_PLAYID, DatabaseUtils.sqlEscapeString(playId),
+				COLUMN_DECKS_ACTORNAME,	DatabaseUtils.sqlEscapeString(actorName));
 		Cursor cursor = db.rawQuery(deckQuery, null);
 		
-		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
-		{
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())	{
 			DeckImage deckImage = new DeckImage();
 			deckImage.setPlayId(cursor.getString(0));
 			deckImage.setActorName(cursor.getString(1));
@@ -260,24 +247,21 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		
 		return deckImages;
 	}
-	
-	public ArrayList<Dialogue> getDialogues(String playId, int min, int max)
-	{
+
+
+	public ArrayList<Dialogue> getDialogues(String playId, int min, int max) {
 		ArrayList<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String dialoguesQuery = String.format("select * from %s where %s=%s and %s>=%d and %s<%d", 
+		String dialoguesQuery = String.format("select * from %s "
+				+ "where %s=\"%s\" and %s>=%d and %s<%d", 
 				TABLE_DIALOGUES, 
-				COLUMN_DIALOGUES_PLAYID, 
-				DatabaseUtils.sqlEscapeString(playId),
-				COLUMN_DIALOGUES_DIALOGUEID,
-				min,
-				COLUMN_DIALOGUES_DIALOGUEID,
-				max);
+				COLUMN_DIALOGUES_PLAYID, DatabaseUtils.sqlEscapeString(playId),
+				COLUMN_DIALOGUES_DIALOGUEID, min,
+				COLUMN_DIALOGUES_DIALOGUEID, max);
 		Cursor cursor = db.rawQuery(dialoguesQuery, null);
 		
-		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
-		{
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())	{
 			Dialogue dialogue = new Dialogue();
 			
 			dialogue.setPlayId(cursor.getString(0));
@@ -295,8 +279,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return dialogues;
 	}
 	
-	public long insertPlayConfig(PlayConfig playConfig)
-	{
+	public long insertPlayConfig(PlayConfig playConfig) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PLAYCONFIGS_ID, playConfig.getId());
 		cv.put(COLUMN_PLAYCONFIGS_NAME, playConfig.getName());
@@ -309,8 +292,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return getWritableDatabase().insert(TABLE_PLAYCONFIGS, null, cv);
 	}
 	
-	public long insertActor(Actor actor)
-	{
+	public long insertActor(Actor actor){
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_ACTORS_PLAYID, actor.getPlayId());
 		cv.put(COLUMN_ACTORS_NAME, actor.getName());
@@ -318,8 +300,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return getWritableDatabase().insert(TABLE_ACTORS, null, cv);
 	}
 	
-	public long insertDeckImage(DeckImage deckImage)
-	{
+	public long insertDeckImage(DeckImage deckImage) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_DECKS_PLAYID, deckImage.getPlayId());
 		cv.put(COLUMN_DECKS_ACTORNAME, deckImage.getActorName());
@@ -330,8 +311,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return getWritableDatabase().insert(TABLE_DECKS, null, cv);
 	}
 	
-	public long insertDialogue(Dialogue dialogue)
-	{
+	public long insertDialogue(Dialogue dialogue) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_DIALOGUES_PLAYID, dialogue.getPlayId());
 		cv.put(COLUMN_DIALOGUES_DIALOGUEID, dialogue.getDialogueId());
