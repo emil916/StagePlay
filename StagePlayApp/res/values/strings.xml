@@ -11,5 +11,6 @@
     <string name="download">Download Plays</string>
     <string name="title">Title</string>
     <string name="author">Author</string>
-
+	<string name="btn_details_label">Details</string>
+	<string name="btn_play_label">Play</string>
 </resources>
