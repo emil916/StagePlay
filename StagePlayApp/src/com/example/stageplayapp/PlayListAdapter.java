@@ -39,19 +39,29 @@ public View getView(int position,View convertView,ViewGroup parent){
         tv_title = (TextView)row.findViewById(R.id.tv_title);
         tv_author = (TextView)row.findViewById(R.id.tv_author);
         if(data!=null && data.size()>position){
-    		PlayConfig playconfig = data.get(position);
+    		final PlayConfig playconfig = data.get(position);
     		tv_title.setText(playconfig.getName());
     		tv_author.setText(playconfig.getAuthor());
     		btn_details.setText(context.getString(R.string.btn_details_label));
     		btn_play.setText(context.getString(R.string.btn_play_label));
     		
     		btn_details.setTag(playconfig);
+    		btn_play.setTag(playconfig);
     		
     		btn_details.setOnClickListener(new View.OnClickListener(){
     			@Override public void onClick(View v){
     				Intent i = new Intent(context, PlayDetailsActivity.class);
+    				i.putExtra(PlayDetailsActivity.PARCELSTRING_PLAYCONFIG_TO_DISPLAY, playconfig);
+    				context.startActivity(i);
+    			}
+    		});
+    		
+    		btn_play.setOnClickListener(new View.OnClickListener(){
+    			@Override public void onClick(View v){
+    				Intent i = new Intent(context, PlayWatchActivity.class);
     				PlayConfig tag = (PlayConfig)v.getTag();
-    				i.putExtra(PlayDetailsActivity.PARCELSTRING_PLAYCONFIG_TO_DISPLAY, tag);
+    				// TODO: Put play config AND optional dialogueId if resuming
+    				//i.putExtra("", tag);
     				context.startActivity(i);
     			}
     		});
