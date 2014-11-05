@@ -1,12 +1,15 @@
 package com.example.stageplayapp.helpers;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.example.stageplayapp.models.Actor;
@@ -320,5 +323,63 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		cv.put(COLUMN_DIALOGUES_TEXT, dialogue.getText());
 		
 		return getWritableDatabase().insert(TABLE_DIALOGUES, null, cv);
+	}
+	
+	public boolean insertDialogues(ArrayList<Dialogue> dialogues)
+	{
+		SQLiteDatabase db = null;
+		try{
+			db = getWritableDatabase();
+			db.beginTransaction();
+			ListIterator<Dialogue> it1 = dialogues.listIterator();
+			while (it1.hasNext()) {
+				try {
+					insertDialogue(it1.next());
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+			db.setTransactionSuccessful();
+			return true;
+		}
+		catch(SQLiteException sqx)
+		{
+			Log.e(TAG, sqx.getMessage());
+			return false;
+		}
+		finally{
+			if(db!=null)
+				db.endTransaction();
+		}
+	}
+	
+	public boolean insertActors(ArrayList<Actor> actors)
+	{
+		SQLiteDatabase db = null;
+		try{
+			db = getWritableDatabase();
+			db.beginTransaction();
+			ListIterator<Actor> it1 = actors.listIterator();
+			while (it1.hasNext()) {
+				try {
+					insertActor(it1.next());
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+			db.setTransactionSuccessful();
+			return true;
+		}
+		catch(SQLiteException sqx)
+		{
+			Log.e(TAG, sqx.getMessage());
+			return false;
+		}
+		finally{
+			if(db!=null)
+				db.endTransaction();
+		}
 	}
 }

@@ -4,13 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <!-- When we show the name of the play, we should also include year in brackets IF year is present -->
-	 <TextView
-        android:id="@+id/tv_playdetails_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name of play"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+	<LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+        >
+	    <!-- When we show the name of the play, we should also include year in brackets IF year is present -->
+		 <TextView
+	        android:id="@+id/tv_playdetails_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Name of play (date)"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+		 
+	</LinearLayout>
 
 	 <TextView 
 	     android:id="@+id/tv_playdetails_author"

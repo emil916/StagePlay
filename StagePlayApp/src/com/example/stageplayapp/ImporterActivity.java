@@ -1,6 +1,7 @@
 package com.example.stageplayapp;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -192,32 +193,26 @@ public class ImporterActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			StagePlayDbHelper db = new StagePlayDbHelper(ImporterActivity.this);
-	        db.insertPlayConfig(stagePlayConfigFile.getPlayConfig());
-	        ListIterator<Dialogue> it1 = dialogues.getDialogues().listIterator();
-			while (it1.hasNext()) {
-				try {
-					db.insertDialogue(it1.next());
-				} catch (SQLiteException ex) {
-					Log.e(TAG, ex.getMessage());
-					return false;
-				}
-	        }
+	        boolean success = (db.insertPlayConfig(stagePlayConfigFile.getPlayConfig())>0);
+	        if(!success) return false;
+	        success = db.insertDialogues(dialogues.getDialogues());
+	        if(!success) return false;
 	        
-	        
+	        ArrayList<Actor> actors = new ArrayList<Actor>();
 	        Iterator<String> it2 = dialogues.getActors().iterator();
 	        while (it2.hasNext()) {
 	        	Actor actor = new Actor();
 	        	actor.setPlayId(stagePlayConfigFile.getPlayConfig().getId());
 	        	actor.setName(it2.next());
-				try {
-					db.insertActor(actor);
-				} catch (SQLiteException ex) {
-					Log.e(TAG, ex.getMessage());
-					return false;
-				}
+				actors.add(actor);
 	        }
-	        
-			return true;
+	       
+	        if(actors.size()>0)
+        	{
+	        	success = db.insertActors(actors);
+        	}
+	       
+			return success;
 		}
 		
 		@Override

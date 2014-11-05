@@ -17,7 +17,6 @@ import android.widget.ListView;
 
 public class PlayListActivity extends Activity{
 	
-	private ListView ListView1;
 	StagePlayDbHelper dbHelper;
 	ArrayList<PlayConfig> data = new ArrayList<PlayConfig>();
 	PlayListAdapter adapter;
@@ -28,9 +27,10 @@ public class PlayListActivity extends Activity{
 		setContentView(R.layout.activity_playlist);
 		dbHelper = new StagePlayDbHelper(this);
 		data = dbHelper.getAllPlayConfigs();
-		adapter = new PlayListAdapter(this, R.layout.row,data);
+		adapter = new PlayListAdapter(this, R.layout.playdetails_row, data);
 		ListView l = (ListView) findViewById(R.id.listView1);
 		l.setAdapter(adapter);
+		
 		Button btn_pickPlay = (Button)findViewById(R.id.button_download);
 		 
 		btn_pickPlay.setOnClickListener(new OnClickListener() {
@@ -44,10 +44,11 @@ public class PlayListActivity extends Activity{
 		});
 	}
 	
-	//@Override public void onResume()
+	@Override public void onResume()
 	{
-		//this.data = dbHelper.getAllPlayConfigs();
-		//adapter.setNotifyOnChange(true);
+		super.onResume();
+		this.data = dbHelper.getAllPlayConfigs();
+		adapter.setNotifyOnChange(true);
 	}
 }
 

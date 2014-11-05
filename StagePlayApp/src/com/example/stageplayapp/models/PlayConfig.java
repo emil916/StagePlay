@@ -25,7 +25,6 @@ public class PlayConfig implements Parcelable{
 		genre = p.readString();
 		published = p.readString();
 		summary = p.readString();
-		
 	}
 	
 	@Override
@@ -42,7 +41,7 @@ public class PlayConfig implements Parcelable{
 	
 	public static final Parcelable.Creator<PlayConfig> CREATOR = new Parcelable.Creator<PlayConfig>() {
 		public PlayConfig createFromParcel(Parcel p) {
-			return null;
+			return new PlayConfig(p);
 		
 		}
 

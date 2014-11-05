@@ -19,7 +19,7 @@ public class PlayDetailsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playdetails);
 		
-		PlayConfig pconfig = getPlayConfig(getIntent());
+		PlayConfig pconfig = getIntent().getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_DISPLAY);
 		if(pconfig==null)
 		{
 			Toast errorMsg = Toast.makeText(this, "Error! Nothing to display", Toast.LENGTH_LONG);
@@ -50,13 +50,5 @@ public class PlayDetailsActivity extends Activity{
 		summary.setText(pconfig.getSummary());
 	}
 	
-	private PlayConfig getPlayConfig(Intent intent)
-	{
-		if(intent == null)
-			return null;
-		
-		PlayConfig pc = intent.getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_DISPLAY);
-		return pc;
-	}
 }
 
