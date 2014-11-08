@@ -152,7 +152,7 @@ public class PlayDirector {
 		return dialogues.get(currDialogueId);
 	}
 	
-	public Picture getCurrentDeckImage()
+	public Picture getCurrentPicture()
 	{
 		Dialogue d = getCurrentDialogue();
 		if(d==null || d.getActorSeqId()==0) return null;
