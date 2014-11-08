@@ -201,7 +201,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return config;
 	}
 	
-	public ArrayList<Actor> getActors(String playId) {
+	public ArrayList<Actor> getAllActors(String playId) {
 		ArrayList<Actor> actors = new ArrayList<Actor>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -381,5 +381,28 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 			if(db!=null)
 				db.endTransaction();
 		}
+	}
+	
+	public int getMaxDialogueId(String playId)
+	{
+		int dialogueId = -1;
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = String.format("select max(%s) from %s where %s=\"%s\"", 
+				COLUMN_DIALOGUES_DIALOGUEID,
+				TABLE_DIALOGUES, 
+				COLUMN_DIALOGUES_PLAYID, 
+				playId);
+		
+		Cursor cursor = db.rawQuery(query, null);
+		
+		if(cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			dialogueId = cursor.getInt(0);
+		}
+		
+		cursor.close();
+		db.close();
+		
+		return dialogueId;
 	}
 }
