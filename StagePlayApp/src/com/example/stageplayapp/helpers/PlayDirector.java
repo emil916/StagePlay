@@ -56,7 +56,7 @@ public class PlayDirector {
 		decks = new HashMap<String, ArrayList<DeckImage>>();
 		defaultDeck = new ArrayList<Picture>();
 		
-		loadDefaultDecks();
+//		loadDefaultDecks();
 		loadMaxDialogueId();
 		loadDialogues();
 		loadActors();
@@ -70,8 +70,8 @@ public class PlayDirector {
 			
 			for(String imgName: imgNames)
 			{
-				String path = "deck/default/nicubunu_Stickman_1.svg";
-//				String path = "nicubunu_Stickman_1.svg";
+//				String path = "/deck/default/nicubunu_Stickman_1.svg";
+				String path = defaultDeckAssetsSubDir + File.separator + imgName;
 				SVG svg = SVGParser.getSVGFromAsset(context.getAssets(), path);
 //				SVG svg = SVGParser.getSVGFromResource(context.getResources(), ass)
 				defaultDeck.add(svg.getPicture());

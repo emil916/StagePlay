@@ -3,7 +3,11 @@ package com.example.stageplayapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
@@ -12,10 +16,12 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.stageplayapp.helpers.PlayDirector;
 public class PlayWatchActivity extends Activity{
 	
+	TextView tv_dialog;
 	LinearLayout layout1, layout2;
 	ImageView imageView;
 	boolean test = true;
@@ -28,6 +34,9 @@ public class PlayWatchActivity extends Activity{
 		
 		playDirector = new PlayDirector(this, "0e557084-6a76-4534-9a10-544cb91f6fbb");
 		
+		tv_dialog = (TextView)findViewById(R.id.tv_wp_dialogueText);
+		tv_dialog.setText(playDirector.getCurrentDialogue().getText());
+		
 		ImageButton im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
 		ImageButton im_play = (ImageButton)findViewById(R.id.imageButton_play);
 		ImageButton im_next = (ImageButton)findViewById(R.id.imageButton_next);
@@ -37,8 +46,27 @@ public class PlayWatchActivity extends Activity{
 		
 		imageView = (ImageView)findViewById(R.id.imageView1);
 		
-		Picture pic = playDirector.getCurrentPicture();
-		imageView.setImageBitmap(pictureDrawable2Bitmap(pic));
+		Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bg_main);
+
+        Config config = bm.getConfig();
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        Bitmap newImage = Bitmap.createBitmap(width, height, config);
+
+        Canvas c = new Canvas(newImage);
+        c.drawBitmap(bm, 0, 0, null);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.YELLOW); 
+        paint.setStyle(Style.FILL);                
+        paint.setTextSize(200);
+        c.drawText(playDirector.getCurrentDialogue().getActorName(), 0, 250, paint);
+
+        imageView.setImageBitmap(newImage);
+		
+//		Picture pic = playDirector.getCurrentPicture();
+//		imageView.setImageBitmap(pictureDrawable2Bitmap(pic));
 	
 		im_prev.setOnClickListener(new OnClickListener() {
 			@Override
