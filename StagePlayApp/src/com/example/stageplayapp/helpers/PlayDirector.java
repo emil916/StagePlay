@@ -1,21 +1,19 @@
 package com.example.stageplayapp.helpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Picture;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGParser;
-import com.example.stageplayapp.R;
+import com.caverock.androidsvg.*;
 import com.example.stageplayapp.models.*;
-
-import java.io.File;
 
 public class PlayDirector {
 
@@ -66,16 +64,18 @@ public class PlayDirector {
 	private void loadDefaultDecks()
 	{
 		try{
-			String[] imgNames = context.getAssets().list(defaultDeckAssetsSubDir);
+			AssetManager assetMgr = context.getAssets();
+			String[] imgNames = assetMgr.list(defaultDeckAssetsSubDir);
 			
 			for(String imgName: imgNames)
 			{
-				String path = "deck/default/nicubunu_Stickman_1.svg";
-//				String path = "nicubunu_Stickman_1.svg";
-				SVG svg = SVGParser.getSVGFromAsset(context.getAssets(), path);
-//				SVG svg = SVGParser.getSVGFromResource(context.getResources(), ass)
-				defaultDeck.add(svg.getPicture());
+				SVG svg = SVG.getFromAsset(assetMgr, defaultDeckAssetsSubDir + File.separator + imgName);
+				defaultDeck.add(svg.renderToPicture());
 			}
+		}
+		catch(SVGParseException spe)
+		{
+			Log.e(TAG, spe.getMessage());
 		}
 		catch(IOException ex)
 		{

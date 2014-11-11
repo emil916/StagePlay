@@ -206,7 +206,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		String actorsQuery = String.format("select * from %s "
-				+ "where %s=\"%s\"", 
+				+ "where %s=%s", 
 				TABLE_ACTORS, 
 				COLUMN_ACTORS_PLAYID, DatabaseUtils.sqlEscapeString(playId));
 		Cursor cursor = db.rawQuery(actorsQuery, null);
@@ -257,7 +257,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		String dialoguesQuery = String.format("select * from %s "
-				+ "where %s=\"%s\" and %s>=%d and %s<%d", 
+				+ "where %s=%s and %s>=%d and %s<=%d", 
 				TABLE_DIALOGUES, 
 				COLUMN_DIALOGUES_PLAYID, DatabaseUtils.sqlEscapeString(playId),
 				COLUMN_DIALOGUES_DIALOGUEID, min,

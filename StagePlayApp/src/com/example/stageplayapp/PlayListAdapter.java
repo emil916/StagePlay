@@ -61,7 +61,7 @@ public View getView(int position,View convertView,ViewGroup parent){
     				Intent i = new Intent(context, PlayWatchActivity.class);
     				PlayConfig tag = (PlayConfig)v.getTag();
     				// TODO: Put play config AND optional dialogueId if resuming
-    				//i.putExtra("", tag);
+    				i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYCONFIG_TO_PLAY, tag);
     				context.startActivity(i);
     			}
     		});
