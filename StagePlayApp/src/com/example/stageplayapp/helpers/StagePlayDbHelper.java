@@ -229,7 +229,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		String deckQuery = String.format("select * from %s "
-				+ "where %s=\"%s\" and %s=\"%s\"", 
+				+ "where %s=%s and %s=%s", 
 				TABLE_DECKS, 
 				COLUMN_DECKS_PLAYID, DatabaseUtils.sqlEscapeString(playId),
 				COLUMN_DECKS_ACTORNAME,	DatabaseUtils.sqlEscapeString(actorName));

@@ -54,7 +54,7 @@ public class PlayDirector {
 		decks = new HashMap<String, ArrayList<DeckImage>>();
 		defaultDeck = new ArrayList<Picture>();
 		
-		loadDefaultDecks();
+//		loadDefaultDecks();
 		loadMaxDialogueId();
 		loadDialogues();
 		loadActors();

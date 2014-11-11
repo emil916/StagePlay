@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-                android:visibility="gone"
+        android:visibility="gone"
         android:orientation="vertical" 
         android:paddingBottom="20dp">
 
@@ -50,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:padding="5dp"
             android:text="Layout1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -60,7 +61,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-
         android:layout_below="@+id/watchLayoutNarrative"
         android:orientation="vertical" >
 
@@ -77,9 +77,6 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
-
     </LinearLayout>
-
-    
 
 </RelativeLayout>

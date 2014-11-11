@@ -3,7 +3,11 @@ package com.example.stageplayapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Picture;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
@@ -23,6 +27,7 @@ public class PlayWatchActivity extends Activity{
 	public static final String PARCELSTRING_PLAYCONFIG_TO_PLAY = "playConfigToPlay";
 	public static final String PARCELSTRING_PLAYCONFIG_DIALOGUEID = "playConfigDialogueId";
 	
+	TextView tv_dialog;
 	LinearLayout layoutNarrative, layoutDialogue;
 	ImageView imageView;
 	boolean test = true;
@@ -37,6 +42,9 @@ public class PlayWatchActivity extends Activity{
 		String playId = config.getId();
 		int dialogueId = getIntent().getIntExtra(PARCELSTRING_PLAYCONFIG_DIALOGUEID, 1);
 		playDirector = new PlayDirector(this, playId, dialogueId);
+		
+		tv_dialog = (TextView)findViewById(R.id.tv_wp_dialogue);
+		tv_dialog.setText(playDirector.getCurrentDialogue().getText());
 		
 		ImageButton im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
 		ImageButton im_play = (ImageButton)findViewById(R.id.imageButton_play);
