@@ -40,36 +40,34 @@
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <EditText
-        android:id="@+id/et_team_member1"
+    <TextView
+        android:id="@+id/tv_member1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/et_introduction"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:hint="Satish Chandra"
-        android:gravity="center"
-        android:ems="10" />
+        android:layout_marginTop="72dp"
+        android:text="Satish Chandra"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/et_team_member2"
+    <TextView
+        android:id="@+id/tv_member2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_team_member1"
+        android:layout_below="@+id/tv_member1"
         android:layout_centerHorizontal="true"
-        android:hint="Emil Abbasov"
-        android:gravity="center"
-        android:layout_marginTop="36dp"
-        android:ems="10" />
+        android:layout_marginTop="33dp"
+        android:text="Emil Abbasov"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/et_team_member3"
+    <TextView
+        android:id="@+id/tv_member3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_team_member2"
+        android:layout_below="@+id/tv_member2"
         android:layout_centerHorizontal="true"
-        android:hint="Sagar Deo"
-        android:gravity="center"
-        android:layout_marginTop="40dp"
-        android:ems="10" />
+        android:layout_marginTop="30dp"
+        android:text="Sagar Deo"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
