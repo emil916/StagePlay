@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import android.content.Context;
 import android.graphics.Picture;
 import android.util.Log;
 import android.util.SparseArray;
+
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
+import com.example.stageplayapp.R;
 import com.example.stageplayapp.models.*;
+
 import java.io.File;
 
 public class PlayDirector {
@@ -20,7 +24,7 @@ public class PlayDirector {
 	private String playId;
 	private int currDialogueId;
 	
-	private static final String defaultDeckAssetsSubDir = "/deck/default";
+	private static final String defaultDeckAssetsSubDir = "deck/default";
 	
 	private SparseArray<Dialogue> dialogues;
 	private HashMap<String, Actor> actors;
@@ -66,7 +70,10 @@ public class PlayDirector {
 			
 			for(String imgName: imgNames)
 			{
-				SVG svg = SVGParser.getSVGFromAsset(context.getAssets(), defaultDeckAssetsSubDir + File.separator + imgName);
+				String path = "deck/default/nicubunu_Stickman_1.svg";
+//				String path = "nicubunu_Stickman_1.svg";
+				SVG svg = SVGParser.getSVGFromAsset(context.getAssets(), path);
+//				SVG svg = SVGParser.getSVGFromResource(context.getResources(), ass)
 				defaultDeck.add(svg.getPicture());
 			}
 		}

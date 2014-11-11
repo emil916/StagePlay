@@ -1,23 +1,32 @@
 package com.example.stageplayapp;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Picture;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
-import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.stageplayapp.helpers.PlayDirector;
 public class PlayWatchActivity extends Activity{
 	
 	LinearLayout layout1, layout2;
-	TextureView textv;
+	ImageView imageView;
 	boolean test = true;
+	PlayDirector playDirector;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_watchplay);
+		
+		playDirector = new PlayDirector(this, "0e557084-6a76-4534-9a10-544cb91f6fbb");
 		
 		ImageButton im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
 		ImageButton im_play = (ImageButton)findViewById(R.id.imageButton_play);
@@ -26,8 +35,11 @@ public class PlayWatchActivity extends Activity{
 		layout1 = (LinearLayout)findViewById(R.id.linearLayout_1);
 		layout2 = (LinearLayout)findViewById(R.id.linearLayout_2);
 		
-		textv = (TextureView)findViewById(R.id.textureView1);
+		imageView = (ImageView)findViewById(R.id.imageView1);
 		
+		Picture pic = playDirector.getCurrentPicture();
+		imageView.setImageBitmap(pictureDrawable2Bitmap(pic));
+	
 		im_prev.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -55,9 +67,20 @@ public class PlayWatchActivity extends Activity{
 		im_next.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				// Draw the label text
+				 //  canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
 				
 			}
 		});
+	}
+
+
+	//Convert Picture to Bitmap
+	private Bitmap pictureDrawable2Bitmap(Picture picture) {
+	    PictureDrawable pd = new PictureDrawable(picture);
+	    Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(bitmap);
+	    canvas.drawPicture(pd.getPicture());
+	    return bitmap;
 	}
 }
