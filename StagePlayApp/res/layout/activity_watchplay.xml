@@ -20,7 +20,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bracket1" />
+            android:src="@drawable/bracket1" 
+            android:contentDescription="@null"/>
 
         <TextView
             android:id="@+id/tv_wp_narrative"
@@ -29,7 +30,7 @@
             android:layout_gravity="center"
             android:layout_weight="3"
             android:padding="15dp"
-            android:text="Layout1"
+            android:text="@null"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
@@ -40,7 +41,8 @@
             android:paddingRight="10dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@drawable/bracket2" />
+            android:src="@drawable/bracket2"
+            android:contentDescription="@null" />
 
     </LinearLayout>
 
@@ -58,14 +60,15 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:padding="10dp"
-            android:text="Layout2"
+            android:text="@null"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+            android:src="@drawable/abc_ab_bottom_solid_dark_holo"
+            android:contentDescription="@null" />
     </LinearLayout>
 
         <ImageButton
@@ -76,7 +79,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="40dp"
-            android:contentDescription="Previous"
+            android:contentDescription="@string/watch_btnprev_text"
             android:src="@android:drawable/ic_media_rew" />
 
         <ImageButton
@@ -85,7 +88,7 @@
             android:layout_height="40dp"
             android:layout_alignTop="@id/imageButton_prev"
             android:layout_centerHorizontal="true"
-            android:contentDescription="Play"
+            android:contentDescription="@string/watch_btnplay_text"
             android:src="@android:drawable/ic_media_play" />
 
         <ImageButton
@@ -95,7 +98,7 @@
             android:layout_alignTop="@id/imageButton_prev"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40dp"
-            android:contentDescription="Next"
+            android:contentDescription="@string/watch_btnnext_text"
             android:src="@android:drawable/ic_media_ff" />
-
+ 
 </RelativeLayout>

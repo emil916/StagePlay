@@ -2,34 +2,97 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="horizontal" 
+    android:baselineAligned="false"
+    >
 
+    <LinearLayout
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="left"
+        >
+    <ImageView
+        android:id="@+id/list_image_book"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/imgbook"
+        android:contentDescription="@null"
+        />
+    
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight=".50"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        >       
+    
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="@null"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/tv_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author"
+        android:text="@null"
+        android:paddingTop="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:id="@+id/btn_play"
-        android:layout_width="81dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="Play" />
-
-    <Button
-        android:id="@+id/btn_details"
+    
+    <TextView
+        android:id="@+id/tv_genre_and_lang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+	</LinearLayout>
+	
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_gravity="right"
-        android:text="Details" />
+        >
+    <Button
+        android:id="@+id/btn_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="10dp"
+        android:padding="5dp"
+        android:layout_margin="-10dp"
+        android:text="@string/playdetails_row_btnplay_text" />
 
+    <Button
+        android:id="@+id/btn_resume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="10dp"
+        android:padding="5dp"
+        android:layout_margin="-10dp"
+        android:text="@string/playdetails_row_btnresume_text" />
+    
+    <Button
+        android:id="@+id/btn_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="10dp"
+        android:padding="5dp"
+        android:layout_margin="-10dp"
+        android:text="@string/playdetails_row_btndetails_text" />
+    
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="10dp"
+        android:padding="5dp"
+        android:layout_margin="-10dp"
+        android:text="@string/playdetails_row_btndelete_text" />
+	</LinearLayout>
 </LinearLayout>

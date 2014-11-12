@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
  
 public class PlayDetailsActivity extends Activity{
-	public static final String PARCELSTRING_PLAYCONFIG_TO_DISPLAY = "playConfigToDisplay";
+	public static final String PARCELSTRING_PLAYCONFIG_TO_DISPLAY_DETAILS = "playConfigToDisplay";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -19,7 +19,7 @@ public class PlayDetailsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playdetails);
 		
-		PlayConfig pconfig = getIntent().getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_DISPLAY);
+		PlayConfig pconfig = getIntent().getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_DISPLAY_DETAILS);
 		if(pconfig==null)
 		{
 			Toast errorMsg = Toast.makeText(this, "Error! Nothing to display", Toast.LENGTH_LONG);

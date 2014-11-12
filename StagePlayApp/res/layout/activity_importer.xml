@@ -8,7 +8,7 @@
         android:id="@+id/button_ai_pickFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick a ZIP File" />
+        android:text="@string/importer_load_button_text" />
 
     <TextView
         android:id="@+id/tv_ai_info"
@@ -21,12 +21,13 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
+        android:contentDescription="@null"
          />
 
     <Button
         android:id="@+id/button_ai_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK" />
+        android:text="@string/importer_ok_button_text" />
 
 </LinearLayout>

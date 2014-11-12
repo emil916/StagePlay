@@ -29,8 +29,8 @@ import com.example.stageplayapp.models.PlayConfig;
 
 public class PlayWatchActivity extends Activity{
 	public static final String TAG = "PlayWatchActivity";
-	public static final String PARCELSTRING_PLAYCONFIG_TO_PLAY = "playConfigToPlay";
-	public static final String PARCELSTRING_PLAYCONFIG_DIALOGUEID = "playConfigDialogueId";
+	public static final String PARCELSTRING_PLAYID_TO_PLAY = "playConfigToPlay";
+	public static final String PARCELSTRING_DIALOGUEID_TO_RESUME = "playConfigDialogueId";
 	
 	TextView tv_dialogue;
 	LinearLayout layoutNarrative, layoutDialogue;
@@ -43,9 +43,8 @@ public class PlayWatchActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_watchplay);
 		
-		PlayConfig config = (PlayConfig)getIntent().getParcelableExtra(PARCELSTRING_PLAYCONFIG_TO_PLAY);
-		String playId = config.getId();
-		int dialogueId = getIntent().getIntExtra(PARCELSTRING_PLAYCONFIG_DIALOGUEID, 1);
+		String playId = getIntent().getStringExtra(PARCELSTRING_PLAYID_TO_PLAY);
+		int dialogueId = getIntent().getIntExtra(PARCELSTRING_DIALOGUEID_TO_RESUME, 1);
 		playDirector = new PlayDirector(this, playId, dialogueId);
 		
 		tv_dialogue = (TextView)findViewById(R.id.tv_wp_dialogue);

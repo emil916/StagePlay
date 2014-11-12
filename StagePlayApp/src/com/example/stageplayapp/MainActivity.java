@@ -68,10 +68,8 @@ public class MainActivity extends ActionBarActivity {
 		final int dialogue_id = SharedPreferenceHelper.readInteger(this,
 				SharedPreferenceHelper.DIALOGUE_ID, 1);
 		Intent i = new Intent(this, PlayWatchActivity.class);
-		StagePlayDbHelper db = new StagePlayDbHelper(this);
-		PlayConfig playconfig = db.getPlayConfig(play_id);
-		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYCONFIG_TO_PLAY, playconfig);
-		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYCONFIG_DIALOGUEID, dialogue_id);
+		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYID_TO_PLAY, play_id);
+		i.putExtra(PlayWatchActivity.PARCELSTRING_DIALOGUEID_TO_RESUME, dialogue_id);
 		startActivity(i);
 	}
 
