@@ -16,7 +16,7 @@
 	<string name="about_app_desc">StagePlay is an app that enables users to read and enjoy dramas/scripts by adding a visual dimension to them, hoping to provide greater immersion and an overall fun experience</string>
 	<string name="about_app_version">Version 1.0</string>
 	<string name="importer_load_button_text">Load from ZIP File</string>
-	<string name="importer_ok_button_text">OK</string>
+	<string name="importer_ok_button_text">Back</string>
 	<string name="playdetails_row_btnplay_text">Play</string>
 	<string name="playdetails_row_btnresume_text">Resume</string>
 	<string name="playdetails_row_btndetails_text">Details</string>

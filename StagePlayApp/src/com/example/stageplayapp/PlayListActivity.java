@@ -48,7 +48,9 @@ public class PlayListActivity extends Activity{
 	{
 		super.onResume();
 		this.data = dbHelper.getAllPlayConfigs();
-		adapter.setNotifyOnChange(true);
+		adapter.clear();
+		adapter.addAll(this.data);
+		adapter.notifyDataSetChanged();
 	}
 }
 

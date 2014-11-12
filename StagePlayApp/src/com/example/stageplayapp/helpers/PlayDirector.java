@@ -140,20 +140,16 @@ public class PlayDirector {
 		return dialogues.get(currDialogueId);
 	}
 	
-	public void getNextDialogue()
+	public void moveToNextDialogue()
 	{
-		if(currDialogueId<maxDialogueIdForPlay)
+		if(currDialogueId<=maxDialogueIdForPlay)
 			currDialogueId++;
-
-//		return dialogues.get(currDialogueId);
 	}
 	
-	public void getPreviousDialogue()
+	public void moveToPreviousDialogue()
 	{
 		if(currDialogueId>1)
 			currDialogueId--;
-		
-//		return dialogues.get(currDialogueId);
 	}
 	
 	public Picture getCurrentPicture()

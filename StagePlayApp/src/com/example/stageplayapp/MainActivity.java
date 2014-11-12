@@ -74,7 +74,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void startAllPlaysActivity() {
-		System.out.println("In this activity");
 		Intent i = new Intent(this, PlayListActivity.class);
 		startActivity(i);
 	}

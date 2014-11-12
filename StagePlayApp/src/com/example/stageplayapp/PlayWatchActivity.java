@@ -127,7 +127,7 @@ public class PlayWatchActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				if (playDirector.hasPrevious()) {
-					playDirector.getPreviousDialogue();
+					playDirector.moveToPreviousDialogue();
 					render();
 				}
 			}
@@ -146,7 +146,7 @@ public class PlayWatchActivity extends Activity{
 				// Draw the label text
 				 //  canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
 				if (playDirector.hasNext()) {
-					playDirector.getNextDialogue();
+					playDirector.moveToNextDialogue();
 					render();
 				} 
 			}

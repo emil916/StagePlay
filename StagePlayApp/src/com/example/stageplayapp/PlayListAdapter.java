@@ -1,6 +1,7 @@
 package com.example.stageplayapp;
 import java.util.*;
 
+import com.example.stageplayapp.helpers.StagePlayDbHelper;
 import com.example.stageplayapp.models.PlayConfig;
 import com.example.stageplayapp.PlayDetailsActivity;
 
@@ -8,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +48,7 @@ public View getView(int position,View row,ViewGroup parent){
     		final PlayConfig playconfig = data.get(position);
     		tv_title.setText(playconfig.getName());
     		tv_author.setText(playconfig.getAuthor());
-    		//btn_details.setText(context.getString(R.string.btn_details_label));
-    		//btn_play.setText(context.getString(R.string.btn_play_label));
-    		
+    		    		
     		//TODO: Only enable Resume button if item is resumable
     		
     		
@@ -57,6 +57,7 @@ public View getView(int position,View row,ViewGroup parent){
     		
     		btn_details.setTag(playconfig);
     		btn_play.setTag(playconfig);
+    		btn_delete.setTag(playconfig);
     		
     		btn_details.setOnClickListener(new View.OnClickListener(){
     			@Override public void onClick(View v){
@@ -91,12 +92,22 @@ public View getView(int position,View row,ViewGroup parent){
 				public void onClick(View v) {
 					// TODO: Call DB's delete method and pass in playId
 					// TODO: After delete, refresh the data in this adapter!
+					PlayConfig tag = (PlayConfig)v.getTag();
+					StagePlayDbHelper dbHelper = new StagePlayDbHelper(context);
+					dbHelper.deletePlay(tag.getId());
+					
+					data.remove(tag);
+					notifyDataSetChanged();
 				}
 			});
     		
     		if(position%2==0)
     		{
     			row.setBackgroundColor(Color.LTGRAY);
+    		}
+    		else
+    		{
+    			row.setBackgroundColor(Color.parseColor("#ECECEC"));
     		}
     	}
 	}

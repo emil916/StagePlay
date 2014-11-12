@@ -405,4 +405,20 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		
 		return dialogueId;
 	}
+	
+	public void deletePlay(String playId)
+	{
+		String template = "delete from %s where %s=%s";
+		String quotedPlayId = DatabaseUtils.sqlEscapeString(playId);
+		String deleteDecksQuery = String.format(template, TABLE_DECKS, COLUMN_DECKS_PLAYID, quotedPlayId);
+		String deleteDialoguesQuery = String.format(template, TABLE_DIALOGUES, COLUMN_DIALOGUES_PLAYID, quotedPlayId);
+		String deleteActorsQuery = String.format(template, TABLE_ACTORS, COLUMN_ACTORS_PLAYID, quotedPlayId);
+		String deletePlayConfigQuery = String.format(template, TABLE_PLAYCONFIGS, COLUMN_PLAYCONFIGS_ID, quotedPlayId);
+		
+		SQLiteDatabase db = getWritableDatabase();
+		db.execSQL(deleteDecksQuery);
+		db.execSQL(deleteDialoguesQuery);
+		db.execSQL(deleteActorsQuery);
+		db.execSQL(deletePlayConfigQuery);
+	}
 }
