@@ -1,5 +1,9 @@
 package com.example.stageplayapp;
 
+import com.example.stageplayapp.helpers.SharedPreferenceHelper;
+import com.example.stageplayapp.helpers.StagePlayDbHelper;
+import com.example.stageplayapp.models.PlayConfig;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -59,7 +63,15 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void startResumeActivity() {
+		final String play_id = SharedPreferenceHelper.readString(this,
+				SharedPreferenceHelper.PLAY_ID, null);
+		final int dialogue_id = SharedPreferenceHelper.readInteger(this,
+				SharedPreferenceHelper.DIALOGUE_ID, 1);
 		Intent i = new Intent(this, PlayWatchActivity.class);
+		StagePlayDbHelper db = new StagePlayDbHelper(this);
+		PlayConfig playconfig = db.getPlayConfig(play_id);
+		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYCONFIG_TO_PLAY, playconfig);
+		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYCONFIG_DIALOGUEID, dialogue_id);
 		startActivity(i);
 	}
 
@@ -97,4 +109,5 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }

@@ -54,7 +54,7 @@ public class PlayDirector {
 		decks = new HashMap<String, ArrayList<DeckImage>>();
 		defaultDeck = new ArrayList<Picture>();
 		
-//		loadDefaultDecks();
+		loadDefaultDecks();
 		loadMaxDialogueId();
 		loadDialogues();
 		loadActors();
@@ -140,23 +140,20 @@ public class PlayDirector {
 		return dialogues.get(currDialogueId);
 	}
 	
-	public Dialogue getNextDialogue()
+	public void getNextDialogue()
 	{
 		if(currDialogueId<maxDialogueIdForPlay)
-			{
 			currDialogueId++;
-			}
-		return dialogues.get(currDialogueId);
+
+//		return dialogues.get(currDialogueId);
 	}
 	
-	public Dialogue getPreviousDialogue()
+	public void getPreviousDialogue()
 	{
 		if(currDialogueId>1)
-			{
 			currDialogueId--;
-			}
 		
-		return dialogues.get(currDialogueId);
+//		return dialogues.get(currDialogueId);
 	}
 	
 	public Picture getCurrentPicture()

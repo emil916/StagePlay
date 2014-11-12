@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Picture;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
@@ -17,20 +19,23 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.stageplayapp.helpers.PlayDirector;
+import com.example.stageplayapp.helpers.SharedPreferenceHelper;
 import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
+
 public class PlayWatchActivity extends Activity{
 	public static final String TAG = "PlayWatchActivity";
 	public static final String PARCELSTRING_PLAYCONFIG_TO_PLAY = "playConfigToPlay";
 	public static final String PARCELSTRING_PLAYCONFIG_DIALOGUEID = "playConfigDialogueId";
 	
-	TextView tv_dialog;
+	TextView tv_dialogue;
 	LinearLayout layoutNarrative, layoutDialogue;
 	ImageView imageView;
-	boolean test = true;
+	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
 
 	@Override
@@ -43,30 +48,51 @@ public class PlayWatchActivity extends Activity{
 		int dialogueId = getIntent().getIntExtra(PARCELSTRING_PLAYCONFIG_DIALOGUEID, 1);
 		playDirector = new PlayDirector(this, playId, dialogueId);
 		
-		tv_dialog = (TextView)findViewById(R.id.tv_wp_dialogue);
-		tv_dialog.setText(playDirector.getCurrentDialogue().getText());
+		tv_dialogue = (TextView)findViewById(R.id.tv_wp_dialogue);
 		
-		ImageButton im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
-		ImageButton im_play = (ImageButton)findViewById(R.id.imageButton_play);
-		ImageButton im_next = (ImageButton)findViewById(R.id.imageButton_next);
+		im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
+		im_play = (ImageButton)findViewById(R.id.imageButton_play);
+		im_next = (ImageButton)findViewById(R.id.imageButton_next);
 		
 		layoutNarrative = (LinearLayout)findViewById(R.id.watchLayoutNarrative);
 		layoutDialogue = (LinearLayout)findViewById(R.id.watchLayoutDialogue);
 		
 		imageView = (ImageView)findViewById(R.id.imageView1);
-		imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); //NOTE: This HAS to be set on image view to render pictures
+		//NOTE: This HAS to be set on image view to render pictures
+		imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
 		
+		render();
+		init_btnEvents();
+	}
+	
+	private void render() {
 		Dialogue currDialogue = playDirector.getCurrentDialogue();
 		if(currDialogue!=null && currDialogue.getActorSeqId()>0){
 			layoutNarrative.setVisibility(View.GONE);
 			layoutDialogue.setVisibility(View.VISIBLE);
 			Picture pic = playDirector.getCurrentPicture();
-			if(pic!=null) {
-				Drawable drawable = new PictureDrawable(pic);
-				imageView.setImageDrawable(drawable);
+			if (pic != null) {
+				// Drawable drawable = new PictureDrawable(pic);
+
+				int width = pic.getWidth();
+				int height = pic.getHeight();
+				Bitmap newImage = Bitmap.createBitmap(width * 2, height, Config.ARGB_8888);
+				Canvas c = new Canvas(newImage);
+				c.drawPicture(pic, new Rect(width, 0, width * 2, height));
+				// c.drawBitmap(bm, 0, 0, null);
+				Paint paint = new Paint();
+				paint.setColor(Color.BLACK);
+				paint.setStyle(Style.FILL);
+				paint.setTypeface(Typeface.create(Typeface.DEFAULT,	Typeface.ITALIC));
+				paint.setTextSize(60);
+				c.drawText(playDirector.getCurrentDialogue().getActorName(), 20, 200, paint);
+
+				imageView.setImageBitmap(newImage);
+//				imageView.setImageDrawable(drawable);
+				
 				/*
-				 * Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bg_main);
-				 * Config config = bm.getConfig();
+				  Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bg_main);
+				  Config config = bm.getConfig();
 					int width = bm.getWidth();
 					int height = bm.getHeight();
 					Bitmap newImage = Bitmap.createBitmap(width, height, config);
@@ -80,9 +106,9 @@ public class PlayWatchActivity extends Activity{
 					imageView.setImageBitmap(newImage);
 				 */
 			}
-			//Display dialogue
-			TextView textViewDialogue = (TextView) findViewById(R.id.tv_wp_dialogue);
-			textViewDialogue.setText(currDialogue.getText());
+			
+			// Display dialogue text
+			tv_dialogue.setText(currDialogue.getText());
 		}
 		else {
 			layoutDialogue.setVisibility(View.GONE);
@@ -92,14 +118,19 @@ public class PlayWatchActivity extends Activity{
 			textViewNarrative.setText(currDialogue.getText());
 		}
 		
-		if(playDirector.hasNext()) im_next.setEnabled(true);
-		if(playDirector.hasPrevious()) im_prev.setEnabled(true);
-		
+		// Enable/Disable navigation buttons
+			im_next.setEnabled(playDirector.hasNext());
+			im_prev.setEnabled(playDirector.hasPrevious());
+	}
+	
+	private void init_btnEvents() {
 		im_prev.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				if (playDirector.hasPrevious()) {
+					playDirector.getPreviousDialogue();
+					render();
+				}
 			}
 		});
 		
@@ -115,9 +146,34 @@ public class PlayWatchActivity extends Activity{
 			public void onClick(View v) {
 				// Draw the label text
 				 //  canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
-				
+				if (playDirector.hasNext()) {
+					playDirector.getNextDialogue();
+					render();
+				} 
 			}
 		});
 	}
 	
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		savePrefs();
+	}
+	
+	/** Called when to save the current field values into SharedPrefences. */
+	private void savePrefs() {
+		Dialogue curD = playDirector.getCurrentDialogue();
+		final String play_id = curD.getPlayId();
+		final int dialogue_id = curD.getDialogueId();
+
+		if (play_id != null)
+			SharedPreferenceHelper.writeString(this, SharedPreferenceHelper.PLAY_ID,
+					play_id);
+
+		if (dialogue_id > 0)
+			SharedPreferenceHelper.writeInteger(this, SharedPreferenceHelper.DIALOGUE_ID,
+					dialogue_id);
+
+	}
 }
