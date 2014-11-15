@@ -14,14 +14,19 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.stageplayapp.helpers.OnSwipeTouchListener;
 import com.example.stageplayapp.helpers.PlayDirector;
 import com.example.stageplayapp.helpers.SharedPreferenceHelper;
 import com.example.stageplayapp.models.Dialogue;
@@ -34,6 +39,7 @@ public class PlayWatchActivity extends Activity{
 	
 	TextView tv_dialogue;
 	LinearLayout layoutNarrative, layoutDialogue;
+	RelativeLayout layout_main;
 	ImageView imageView;
 	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
@@ -55,13 +61,14 @@ public class PlayWatchActivity extends Activity{
 		
 		layoutNarrative = (LinearLayout)findViewById(R.id.watchLayoutNarrative);
 		layoutDialogue = (LinearLayout)findViewById(R.id.watchLayoutDialogue);
+		layout_main = (RelativeLayout)findViewById(R.id.RelativeLayout_wp);
 		
 		imageView = (ImageView)findViewById(R.id.imageView1);
 		//NOTE: This HAS to be set on image view to render pictures
-		imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
+		//imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
 		
 		render();
-		init_btnEvents();
+		init_listeners();
 	}
 	
 	private void render() {
@@ -122,7 +129,26 @@ public class PlayWatchActivity extends Activity{
 			im_prev.setEnabled(playDirector.hasPrevious());
 	}
 	
-	private void init_btnEvents() {
+	private void init_listeners() {
+		
+		layout_main.setOnTouchListener(new OnSwipeTouchListener(this) {
+			@Override
+			public void onSwipeLeft() {
+				if (playDirector.hasNext()) {
+					playDirector.moveToNextDialogue();
+					render();
+				}
+		    }
+			
+			@Override
+			public void onSwipeRight() {
+				if (playDirector.hasPrevious()) {
+					playDirector.moveToPreviousDialogue();
+					render();
+				}
+		    }
+		});
+		
 		im_prev.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -143,8 +169,6 @@ public class PlayWatchActivity extends Activity{
 		im_next.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Draw the label text
-				 //  canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
 				if (playDirector.hasNext()) {
 					playDirector.moveToNextDialogue();
 					render();
@@ -175,4 +199,7 @@ public class PlayWatchActivity extends Activity{
 					dialogue_id);
 
 	}
+	
+
+	
 }

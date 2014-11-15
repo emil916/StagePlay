@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/RelativeLayout_wp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -29,7 +29,8 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="3"
-            android:padding="15dp"
+            android:padding="25dp"
+            android:paddingLeft="10dp"
             android:text="@null"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
