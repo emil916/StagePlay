@@ -130,7 +130,7 @@ public class ImporterActivity extends Activity {
 		protected void onPreExecute() {
 			iv = (ImageView)findViewById(R.id.imageView1);
 		    new ProgressDialog(ImporterActivity.this);
-		    mDialog = ProgressDialog.show(ImporterActivity.this, "", "Loading from zip..");
+		    mDialog = ProgressDialog.show(ImporterActivity.this, "", "Extracting zip..");
 		    super.onPreExecute();
 		}
 		

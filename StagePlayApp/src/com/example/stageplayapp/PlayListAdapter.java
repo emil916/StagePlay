@@ -33,10 +33,12 @@ public View getView(int position,View row,ViewGroup parent){
 	Button btn_details, btn_play, btn_resume, btn_delete;
 	TextView tv_title, tv_author, tv_genre_and_lang;
 	
-	if(row == null){
+	if(row == null)
+	{
 		LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);
-    
+	}
+	
         btn_details = (Button)row.findViewById(R.id.btn_details);
         btn_play = (Button)row.findViewById(R.id.btn_play);
         btn_resume=(Button)row.findViewById(R.id.btn_resume);
@@ -90,8 +92,8 @@ public View getView(int position,View row,ViewGroup parent){
 				
 				@Override
 				public void onClick(View v) {
-					// TODO: Call DB's delete method and pass in playId
-					// TODO: After delete, refresh the data in this adapter!
+					// Call DB's delete method and pass in playId
+					// After delete, refresh the data in this adapter!
 					PlayConfig tag = (PlayConfig)v.getTag();
 					StagePlayDbHelper dbHelper = new StagePlayDbHelper(context);
 					dbHelper.deletePlay(tag.getId());
@@ -110,7 +112,7 @@ public View getView(int position,View row,ViewGroup parent){
     			row.setBackgroundColor(Color.parseColor("#ECECEC"));
     		}
     	}
-	}
+	
     
     return row;
 }

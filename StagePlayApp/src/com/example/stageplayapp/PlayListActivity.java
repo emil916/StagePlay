@@ -15,10 +15,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 
-public class PlayListActivity extends Activity{
+public class PlayListActivity extends Activity {
 	
 	StagePlayDbHelper dbHelper;
-	ArrayList<PlayConfig> data = new ArrayList<PlayConfig>();
 	PlayListAdapter adapter;
 	
 	@Override
@@ -26,7 +25,7 @@ public class PlayListActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist);
 		dbHelper = new StagePlayDbHelper(this);
-		data = dbHelper.getAllPlayConfigs();
+		ArrayList<PlayConfig> data = dbHelper.getAllPlayConfigs();
 		adapter = new PlayListAdapter(this, R.layout.playdetails_row, data);
 		ListView l = (ListView) findViewById(R.id.listView1);
 		l.setAdapter(adapter);
@@ -47,9 +46,13 @@ public class PlayListActivity extends Activity{
 	@Override public void onResume()
 	{
 		super.onResume();
-		this.data = dbHelper.getAllPlayConfigs();
+		refreshData();
+	}
+	
+	public void refreshData()
+	{		
 		adapter.clear();
-		adapter.addAll(this.data);
+		adapter.addAll(dbHelper.getAllPlayConfigs());
 		adapter.notifyDataSetChanged();
 	}
 }
