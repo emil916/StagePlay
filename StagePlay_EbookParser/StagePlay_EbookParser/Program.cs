@@ -9,6 +9,7 @@ namespace StagePlay_EbookParser
     class Program
     {
         static private int MAX_DIALOGUE_LENGTH = 140; // Can be turned into an argument that's passed to the program 
+        static private int MAX_NARRATIVE_LENGTH = 2 * MAX_DIALOGUE_LENGTH; // This can take up a whole screen, so twice as long
 
         static void Main(string[] args)
         {
@@ -140,7 +141,12 @@ namespace StagePlay_EbookParser
                 }
                 else
                 {
-                    var dialogueChunks = ChunkDialogueText(rawDialogue.Text, MAX_DIALOGUE_LENGTH);
+                    var dialogueChunks = new List<String>();
+                    if (!String.IsNullOrEmpty(rawDialogue.Speaker))
+                        dialogueChunks = ChunkDialogueText(rawDialogue.Text, MAX_DIALOGUE_LENGTH);
+                    else
+                        dialogueChunks = ChunkDialogueText(rawDialogue.Text, MAX_NARRATIVE_LENGTH);
+
                     foreach(var dialogueChunk in dialogueChunks)
                     {
                         result.Add(new RawDialogue(rawDialogue.Speaker, dialogueChunk));
