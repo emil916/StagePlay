@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,9 @@ import android.util.Log;
 import com.example.stageplayapp.models.ActorColor;
 import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
+import com.google.common.io.Files;
 
 public class ImportStagePlayPackageHelper {
 	private static final String TAG = "ImportStagePlayPackageHelper";
@@ -296,12 +300,25 @@ public class ImportStagePlayPackageHelper {
 			contents.setHasErrors(true);
 		}
 		
-		return contents; // TODO: Change this to reflect actual result
+		return contents; 
 	}
 	
-	//public byte[] getRawFile(String fileName)
+	public byte[] getRawFile(String subDir, String fileName)
 	{
+		//NOTE: Since we're only supporting SVG, this below code is fine.
+		// If we were to support other file types, we would need to be change this!
 		
+		String svgText;
+		try {
+			String completeFilePath = outputDir + File.separator + subDir
+					+ File.separator + fileName;
+			svgText = Files.toString(new File(completeFilePath), Charsets.UTF_8);
+			return svgText.getBytes();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private void createDir(String dir, String outputLocation)

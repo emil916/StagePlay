@@ -30,14 +30,18 @@ import com.example.stageplayapp.helpers.StagePlayDialoguesFile;
 import com.example.stageplayapp.helpers.StagePlayZipContents;
 import com.example.stageplayapp.models.Actor;
 import com.example.stageplayapp.models.ActorColor;
+import com.example.stageplayapp.models.DeckImage;
 import com.example.stageplayapp.models.Dialogue;
+import com.google.common.io.Files;
 
 public class ImporterActivity extends Activity {
 	private static final String TAG = "ImporterActivity";
 	
 	ImportStagePlayPackageHelper ispph;
 	TextView tv_info;
-	
+	StagePlayZipContents zipContents;
+	StagePlayConfigFile stagePlayConfigFile;
+	StagePlayDialoguesFile dialogues;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +57,7 @@ public class ImporterActivity extends Activity {
 		btn_pick.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public void onClick(View v) {		
-//				Intent intent = new Intent(Intent.ACTION_GET_CONTENT); 
+			public void onClick(View v) {		 
 				
 				FileChooserDialog dialog = new FileChooserDialog(ImporterActivity.this);
 				// Assign listener for the select event.
@@ -62,7 +65,6 @@ public class ImporterActivity extends Activity {
 	    		dialog.setTitle("Select a ZIP File");
 	    		dialog.setFilter(".*zip");
 				dialog.show();
-//	    		fetchFromDialog("/storage/emulated/0/_MyFTP/windermere_last.zip");
 				
 			}
 		});
@@ -79,9 +81,6 @@ public class ImporterActivity extends Activity {
 	private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
 		public void onFileSelected(Dialog source, File file) {
 			source.dismiss();
-//			Toast toast = Toast.makeText(ImporterActivity.this, "File selected: " + file.getAbsolutePath(), Toast.LENGTH_LONG);
-//			toast.show();
-			
 			fetchFromDialog(file.getAbsolutePath());
 		}
 
@@ -119,10 +118,6 @@ public class ImporterActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	StagePlayZipContents zipContents;
-	StagePlayConfigFile stagePlayConfigFile;
-	StagePlayDialoguesFile dialogues;
 	
 	private class MyAsynchTaskFromFile extends AsyncTask<String, Void, Integer> {
 		private ProgressDialog mDialog;
@@ -224,6 +219,35 @@ public class ImporterActivity extends Activity {
 	        	if(colorsForActor!=null && colorsForActor.size()>0)
 	        	{
 	        		success = db.insertActorColors(colorsForActor);
+	        	}
+	        }
+	        
+	        HashMap<String, ArrayList<String>> customizedActors = stagePlayConfigFile.getActors();
+	        for(Actor actor : actors)
+	        {
+	        	ArrayList<DeckImage> actorDeck = new ArrayList<DeckImage>();
+	        	if(customizedActors.containsKey(actor.getName()))
+	        	{
+	        		ArrayList<String> customImagePaths = customizedActors.get(actor.getName());
+	        		for(String customImagePath : customImagePaths)
+	        		{
+	        			String customImageType = Files.getFileExtension(customImagePath);
+	        			
+	        			DeckImage deckImage = new DeckImage();
+	        			deckImage.setActorName(actor.getName());
+	        			deckImage.setPlayId(stagePlayConfigFile.getPlayConfig().getId());
+	        			deckImage.setImageName(customImagePath);
+	        			deckImage.setImageType(customImageType);
+	        			
+	        			byte[] fileBytes = ispph.getRawFile(zipContents.getSubDirName(), customImagePath);
+	        			deckImage.setImage(fileBytes);
+	        			actorDeck.add(deckImage);
+	        		}
+	        	}
+	        	
+	        	if(actorDeck.size()>0) 
+	        	{
+	        		success = success && db.insertDeckImages(actorDeck);
 	        	}
 	        }
 	        

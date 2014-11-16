@@ -500,6 +500,36 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public boolean insertDeckImages(ArrayList<DeckImage> deckImages)
+	{
+		SQLiteDatabase db = null;
+		try{
+			db = getWritableDatabase();
+			db.beginTransaction();
+			ListIterator<DeckImage> it1 = deckImages.listIterator();
+			while (it1.hasNext()) {
+				try {
+					insertDeckImage(it1.next());
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+			db.setTransactionSuccessful();
+			return true;
+		}
+		catch(SQLiteException sqx)
+		{
+			Log.e(TAG, sqx.getMessage());
+			return false;
+		}
+		finally{
+			if(db!=null)
+				db.endTransaction();
+		}
+	
+	}
+	
 	public long insertActorColor(ActorColor actorColor){
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_ACTORCOLORS_PLAYID, actorColor.getPlayId());
