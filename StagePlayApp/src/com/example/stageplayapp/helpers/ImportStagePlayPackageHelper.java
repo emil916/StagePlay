@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.stageplayapp.models.ActorColor;
 import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
 
@@ -39,7 +40,6 @@ public class ImportStagePlayPackageHelper {
 	
 	public StagePlayZipContents deflateZipFile(String zipFile)
 	{
-		//TODO: Do this via async task
 		StagePlayZipContents contents = getUnzippedContents(zipFile, outputDir);
 		if(contents.getHasErrors())	
 			{
@@ -106,44 +106,64 @@ public class ImportStagePlayPackageHelper {
 					}
 
 					if (playObj.has("actors")) {
-//						JSONArray actorsArray = playObj.getJSONArray("actors");
-						 JSONObject actorsObj = (JSONObject)playObj.get("actors");
-						HashMap<String, ArrayList<String>> actors = new HashMap<String, ArrayList<String>>();
-
-//						for (int i = 0; i < actorsArray.length(); i++) {
-//							JSONObject actorObj = actorsArray.getJSONObject(i);
+						JSONObject actorsObj = playObj.getJSONObject("actors");
+						JSONArray actorsArray = actorsObj.getJSONArray("actor");
+						HashMap<String, ArrayList<String>> actorImages = new HashMap<String, ArrayList<String>>();
+						HashMap<String, ArrayList<ActorColor>> actorColors = new HashMap<String, ArrayList<ActorColor>>();
 						
-							if (actorsObj.has("actor")) {
-								// JSONArray actorArray =
-								// actorsObj.getJSONArray("actor");
-								// for(int i=0; i<actorArray.length();i++)
-								// {
-								// JSONObject a = actorArray.getJSONObject(i);
-								JSONObject actorObj = actorsObj.getJSONObject("actor");
-								String id = actorObj.getString("id");
-								ArrayList<String> images = new ArrayList<String>();
+						for (int i = 0; i < actorsArray.length(); i++) 
+						{
+							JSONObject actorObj = actorsArray.getJSONObject(i);
+				
+							String id = actorObj.getString("id");
 
-								if (actorObj.has("deck")) {
-									JSONObject deckObj = (JSONObject) actorObj.get("deck");
-									if (deckObj.has("image")) {
-										JSONArray imageArray = deckObj.getJSONArray("image");
-										// FilenameUtils.getExtension()
-										for (int j = 0; j < imageArray.length(); j++) {
-											String image = imageArray.getString(j);
-											images.add(image);
-										}
+							if (actorObj.has("deck")) {
+								JSONObject deckObj = (JSONObject) actorObj.get("deck");
+								if (deckObj.has("image")) {
+									JSONArray imageArray = deckObj.getJSONArray("image");
+									ArrayList<String> imagesPerActor = new ArrayList<String>();
+									
+									for (int j = 0; j < imageArray.length(); j++) 
+									{
+										String image = imageArray.getString(j);
+										imagesPerActor.add(image);
+									}
+									
+									if (imagesPerActor.size() > 0 && id != null	&& id.length() > 0
+											&& !actorImages.containsKey(id)) {
+										actorImages.put(id, imagesPerActor);
 									}
 								}
-
-								if (images.size() > 0 && id != null	&& id.length() > 0
-										&& !actors.containsKey(id)) {
-									actors.put(id, images);
-								}
-								// }
 							}
-//						}
+							
+							if(actorObj.has("colors"))
+							{
+								JSONObject colorsObj = (JSONObject)actorObj.get("colors");
+								if(colorsObj.has("color"))
+								{
+									ArrayList<ActorColor> colorsPerActor = new ArrayList<ActorColor>();
+									JSONArray colorArray = colorsObj.getJSONArray("color");
+									
+									for(int k =0; k < colorArray.length(); k++)
+									{
+										JSONObject color = (JSONObject)colorArray.get(k);
+										String replace = color.getString("replace");
+										String replaceWith = color.getString("replaceWith");
+										ActorColor actorColor = new ActorColor( contents.getSubDirName(), id, replace, replaceWith);
+										colorsPerActor.add(actorColor);
+									}
+									
+									if(colorsPerActor.size()>0 && id!=null && id.length() > 0 && !actorColors.containsKey(id))
+									{
+										actorColors.put(id, colorsPerActor);
+									}
+								}
+							}
+									
+						}
 
-						config.setActors(actors);
+						config.setActors(actorImages);
+						config.setActorColors(actorColors);
 					}
 				}
 			}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.util.Log;
 
+import com.example.stageplayapp.models.ActorColor;
 import com.example.stageplayapp.models.PlayConfig;
 
 public class StagePlayConfigFile {
@@ -14,6 +15,7 @@ public class StagePlayConfigFile {
 	String playId;
 	PlayConfig playConfig;
 	private HashMap<String, ArrayList<String>> actors = new HashMap<String, ArrayList<String>>();
+	private HashMap<String, ArrayList<ActorColor>> actorColors = new HashMap<String, ArrayList<ActorColor>>();
 	
 	public StagePlayConfigFile()
 	{
@@ -37,6 +39,16 @@ public class StagePlayConfigFile {
 
 	public void setActors(HashMap<String, ArrayList<String>> actors) {
 		this.actors = actors;
+	}
+
+
+	public HashMap<String, ArrayList<ActorColor>> getActorColors() {
+		return actorColors;
+	}
+
+
+	public void setActorColors(HashMap<String, ArrayList<ActorColor>> actorColors) {
+		this.actorColors = actorColors;
 	}
 	
 }

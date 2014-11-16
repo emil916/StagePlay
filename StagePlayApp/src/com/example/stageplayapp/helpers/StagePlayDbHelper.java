@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.example.stageplayapp.models.Actor;
+import com.example.stageplayapp.models.ActorColor;
 import com.example.stageplayapp.models.DeckImage;
 import com.example.stageplayapp.models.Dialogue;
 import com.example.stageplayapp.models.PlayConfig;
@@ -21,7 +22,7 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 	
 	private static final String TAG = "StagePlayDbHelper";
 	
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 4;
 	private static final String DATABASE_NAME = "stageplay";
 	
 	private static final String TABLE_PLAYCONFIGS = "playconfigs";
@@ -50,6 +51,12 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 	private static final String COLUMN_DIALOGUES_ACTORSEQID = "actor_seqid";
 	private static final String COLUMN_DIALOGUES_ACTORNAME = "actor_name";
 	private static final String COLUMN_DIALOGUES_TEXT = "text";
+	
+	private static final String TABLE_ACTORCOLORS = "actorColors";
+	private static final String COLUMN_ACTORCOLORS_PLAYID = "play_id";
+	private static final String COLUMN_ACTORCOLORS_ACTORNAME = "actor_name";
+	private static final String COLUMN_ACTORCOLORS_REPLACE = "replace";
+	private static final String COLUMN_ACTORCOLORS_REPLACEWITH = "replaceWith";
 	
 	public StagePlayDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -117,11 +124,24 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 				COLUMN_DIALOGUES_PLAYID, COLUMN_DIALOGUES_DIALOGUEID
 				);
 		
+		String sqlActorColors = String.format("CREATE TABLE %s " +
+				"(%s TEXT REFERENCES %s(%s), " +
+				"%s TEXT REFERENCES %s(%s), " +
+				"%s TEXT, " + 
+				"%s TEXT )",
+				TABLE_ACTORCOLORS,
+				COLUMN_ACTORCOLORS_PLAYID, TABLE_PLAYCONFIGS, COLUMN_PLAYCONFIGS_ID,
+				COLUMN_ACTORCOLORS_ACTORNAME, TABLE_ACTORS, COLUMN_ACTORS_NAME,
+				COLUMN_ACTORCOLORS_REPLACE,
+				COLUMN_ACTORCOLORS_REPLACEWITH
+				);
+		
 		try{
 			db.execSQL(sqlPlayConfig);
 			db.execSQL(sqlActors);
 			db.execSQL(sqlDialogues);
 			db.execSQL(sqlDecks);
+			db.execSQL(sqlActorColors);
 			Log.i(TAG, "DB creation SUCCESS!");
 		} catch(android.database.SQLException sqlex)
 		{
@@ -138,7 +158,8 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DECKS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTORS);
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYCONFIGS);		
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYCONFIGS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTORCOLORS);
 		onCreate(db);
 		
 		Log.i(TAG, "DB upgrade SUCCESS");
@@ -251,6 +272,32 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 		return deckImages;
 	}
 
+	public ArrayList<ActorColor> getActorColors(String playId, String actorName){
+		ArrayList<ActorColor> actorColors = new ArrayList<ActorColor>();
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = String.format("select * from %s "
+				+ "where %s=%s and %s=%s", 
+				TABLE_ACTORCOLORS, 
+				COLUMN_ACTORCOLORS_PLAYID, DatabaseUtils.sqlEscapeString(playId),
+				COLUMN_ACTORCOLORS_ACTORNAME,	DatabaseUtils.sqlEscapeString(actorName));
+		Cursor cursor = db.rawQuery(query, null);
+		
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())	{
+			ActorColor actorColor = new ActorColor();
+			actorColor.setPlayId(cursor.getString(0));
+			actorColor.setActorName(cursor.getString(1));
+			actorColor.setReplace(cursor.getString(2));
+			actorColor.setReplaceWith(cursor.getString(3));
+			actorColors.add(actorColor);
+		}
+		
+		cursor.close();
+		db.close();
+		
+		return actorColors;
+	}
+	
 
 	public ArrayList<Dialogue> getDialogues(String playId, int min, int max) {
 		ArrayList<Dialogue> dialogues = new ArrayList<Dialogue>();
@@ -410,15 +457,56 @@ public class StagePlayDbHelper extends SQLiteOpenHelper {
 	{
 		String template = "delete from %s where %s=%s";
 		String quotedPlayId = DatabaseUtils.sqlEscapeString(playId);
+		String deleteActorColorsQuery = String.format(template, TABLE_ACTORCOLORS, COLUMN_ACTORCOLORS_PLAYID, quotedPlayId);
 		String deleteDecksQuery = String.format(template, TABLE_DECKS, COLUMN_DECKS_PLAYID, quotedPlayId);
 		String deleteDialoguesQuery = String.format(template, TABLE_DIALOGUES, COLUMN_DIALOGUES_PLAYID, quotedPlayId);
 		String deleteActorsQuery = String.format(template, TABLE_ACTORS, COLUMN_ACTORS_PLAYID, quotedPlayId);
 		String deletePlayConfigQuery = String.format(template, TABLE_PLAYCONFIGS, COLUMN_PLAYCONFIGS_ID, quotedPlayId);
 		
 		SQLiteDatabase db = getWritableDatabase();
+		db.execSQL(deleteActorColorsQuery);
 		db.execSQL(deleteDecksQuery);
 		db.execSQL(deleteDialoguesQuery);
 		db.execSQL(deleteActorsQuery);
 		db.execSQL(deletePlayConfigQuery);
+	}
+
+	public boolean insertActorColors(ArrayList<ActorColor> colorsForActor) {
+		
+		SQLiteDatabase db = null;
+		try{
+			db = getWritableDatabase();
+			db.beginTransaction();
+			ListIterator<ActorColor> it1 = colorsForActor.listIterator();
+			while (it1.hasNext()) {
+				try {
+					insertActorColor(it1.next());
+				} catch (SQLiteException ex) {
+					Log.e(TAG, ex.getMessage());
+					return false;
+				}
+	        }
+			db.setTransactionSuccessful();
+			return true;
+		}
+		catch(SQLiteException sqx)
+		{
+			Log.e(TAG, sqx.getMessage());
+			return false;
+		}
+		finally{
+			if(db!=null)
+				db.endTransaction();
+		}
+	}
+	
+	public long insertActorColor(ActorColor actorColor){
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_ACTORCOLORS_PLAYID, actorColor.getPlayId());
+		cv.put(COLUMN_ACTORCOLORS_ACTORNAME, actorColor.getActorName());
+		cv.put(COLUMN_ACTORCOLORS_REPLACE, actorColor.getReplace());
+		cv.put(COLUMN_ACTORCOLORS_REPLACEWITH, actorColor.getReplaceWith());
+		
+		return getWritableDatabase().insert(TABLE_ACTORCOLORS, null, cv);
 	}
 }

@@ -2,6 +2,7 @@ package com.example.stageplayapp;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -28,6 +29,7 @@ import com.example.stageplayapp.helpers.StagePlayDbHelper;
 import com.example.stageplayapp.helpers.StagePlayDialoguesFile;
 import com.example.stageplayapp.helpers.StagePlayZipContents;
 import com.example.stageplayapp.models.Actor;
+import com.example.stageplayapp.models.ActorColor;
 import com.example.stageplayapp.models.Dialogue;
 
 public class ImporterActivity extends Activity {
@@ -213,6 +215,18 @@ public class ImporterActivity extends Activity {
 	        	success = db.insertActors(actors);
         	}
 	       
+	        HashMap<String, ArrayList<ActorColor>> configActorColors = stagePlayConfigFile.getActorColors();
+	        for(Actor actor : actors)
+	        {
+	        	if(!configActorColors.containsKey(actor.getName())) continue;
+	        	
+	        	ArrayList<ActorColor> colorsForActor = configActorColors.get(actor.getName());
+	        	if(colorsForActor!=null && colorsForActor.size()>0)
+	        	{
+	        		success = db.insertActorColors(colorsForActor);
+	        	}
+	        }
+	        
 			return success;
 		}
 		
