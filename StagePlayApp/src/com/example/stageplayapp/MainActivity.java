@@ -15,6 +15,7 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 	Button btnResume, btnAllplays, btnSettings, btnAbout;
+	String last_playID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +28,12 @@ public class MainActivity extends ActionBarActivity {
 
 		Bundle b = new Bundle();
 		b = getIntent().getExtras();
-
+		
 		btnResume.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				startResumeActivity();// TODO Auto-generated method stub
+				startResumeActivity();
 
 			}
 		});
@@ -40,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				startAllPlaysActivity();// TODO Auto-generated method stub
+				startAllPlaysActivity();
 
 			}
 		});
@@ -48,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				startSettingsActivity();// TODO Auto-generated method stub
+				startSettingsActivity();
 
 			}
 		});
@@ -56,19 +57,19 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				startAboutActivity();// TODO Auto-generated method stub
+				startAboutActivity();
 
 			}
 		});
 	}
 
 	public void startResumeActivity() {
-		final String play_id = SharedPreferenceHelper.readString(this,
-				SharedPreferenceHelper.PLAY_ID, null);
+		if(last_playID == null)
+			return;
 		final int dialogue_id = SharedPreferenceHelper.readInteger(this,
 				SharedPreferenceHelper.DIALOGUE_ID, 1);
 		Intent i = new Intent(this, PlayWatchActivity.class);
-		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYID_TO_PLAY, play_id);
+		i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYID_TO_PLAY, last_playID);
 		i.putExtra(PlayWatchActivity.PARCELSTRING_DIALOGUEID_TO_RESUME, dialogue_id);
 		startActivity(i);
 	}
@@ -88,6 +89,17 @@ public class MainActivity extends ActionBarActivity {
 		startActivity(i);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		last_playID = SharedPreferenceHelper.readString(this,
+				SharedPreferenceHelper.PLAY_ID, null);
+		if (last_playID == null)
+			btnResume.setEnabled(false);
+		else
+			btnResume.setEnabled(true);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
