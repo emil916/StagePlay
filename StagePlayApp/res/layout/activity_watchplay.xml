@@ -3,103 +3,110 @@
     android:id="@+id/RelativeLayout_wp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:keepScreenOn="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/watchLayoutNarrative"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageButton_prev"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp" 
+        android:visibility="gone" >
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageView_scopeTop"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@null"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bracket1" 
-            android:contentDescription="@null"/>
+            android:src="@drawable/bracket1" />
+
+        <ImageView
+            android:id="@+id/imageView_scopeBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@null"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/bracket2" />
 
         <TextView
             android:id="@+id/tv_wp_narrative"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="3"
-            android:padding="25dp"
-            android:paddingLeft="10dp"
-            android:text="@null"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/bracket2"
-            android:contentDescription="@null" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/watchLayoutDialogue"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/imageButton_prev"
+        android:layout_margin="10dp"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/tv_wp_dialogue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:padding="10dp"
-            android:text="@null"
+            android:gravity="center"
+            android:layout_weight="0.4"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/imageView_stickfigure"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:src="@drawable/abc_ab_bottom_solid_dark_holo"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
             android:contentDescription="@null" />
+
     </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/imageButton_prev"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="40dp"
-            android:contentDescription="@string/watch_btnprev_text"
-            android:src="@android:drawable/ic_media_rew" />
+    <ImageButton
+        android:id="@+id/imageButton_prev"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:contentDescription="@string/watch_btnprev_text"
+        android:scaleType="centerCrop"
+        android:src="@drawable/prev" />
 
-        <ImageButton
-            android:id="@+id/imageButton_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@id/imageButton_prev"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/watch_btnplay_text"
-            android:src="@android:drawable/ic_media_play" />
+    <ImageButton
+        android:id="@+id/imageButton_play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@id/imageButton_prev"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/watch_btnplay_text"
+        android:scaleType="centerCrop"
+        android:src="@drawable/play" />
 
-        <ImageButton
-            android:id="@+id/imageButton_next"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@id/imageButton_prev"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp"
-            android:contentDescription="@string/watch_btnnext_text"
-            android:src="@android:drawable/ic_media_ff" />
- 
+    <ImageButton
+        android:id="@+id/imageButton_next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/imageButton_prev"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:contentDescription="@string/watch_btnnext_text"
+        android:scaleType="centerCrop"
+        android:src="@drawable/next" />
+
 </RelativeLayout>

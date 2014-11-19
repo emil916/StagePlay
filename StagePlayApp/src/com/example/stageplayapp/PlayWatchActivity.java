@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,8 +39,8 @@ public class PlayWatchActivity extends Activity{
 	public static final String PARCELSTRING_DIALOGUEID_TO_RESUME = "playConfigDialogueId";
 	
 	TextView tv_dialogue;
-	LinearLayout layoutNarrative, layoutDialogue;
-	RelativeLayout layout_main;
+	LinearLayout layoutDialogue;
+	RelativeLayout layout_main, layoutNarrative;
 	ImageView imageView;
 	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
@@ -47,6 +48,9 @@ public class PlayWatchActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		// Programmatically hide the title bar
+//	     requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		getActionBar().hide();
 		setContentView(R.layout.activity_watchplay);
 		
 		String playId = getIntent().getStringExtra(PARCELSTRING_PLAYID_TO_PLAY);
@@ -59,11 +63,11 @@ public class PlayWatchActivity extends Activity{
 		im_play = (ImageButton)findViewById(R.id.imageButton_play);
 		im_next = (ImageButton)findViewById(R.id.imageButton_next);
 		
-		layoutNarrative = (LinearLayout)findViewById(R.id.watchLayoutNarrative);
+		layoutNarrative = (RelativeLayout)findViewById(R.id.watchLayoutNarrative);
 		layoutDialogue = (LinearLayout)findViewById(R.id.watchLayoutDialogue);
 		layout_main = (RelativeLayout)findViewById(R.id.RelativeLayout_wp);
 		
-		imageView = (ImageView)findViewById(R.id.imageView1);
+		imageView = (ImageView)findViewById(R.id.imageView_stickfigure);
 		//NOTE: This HAS to be set on image view to render pictures
 		//imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
 		
@@ -89,7 +93,7 @@ public class PlayWatchActivity extends Activity{
 				Paint paint = new Paint();
 				paint.setColor(Color.BLACK);
 				paint.setStyle(Style.FILL);
-				paint.setTypeface(Typeface.create(Typeface.DEFAULT,	Typeface.ITALIC));
+				paint.setTypeface(Typeface.create(Typeface.DEFAULT,	Typeface.BOLD_ITALIC));
 				paint.setTextSize(60);
 				c.drawText(playDirector.getCurrentDialogue().getActorName(), 20, 200, paint);
 
