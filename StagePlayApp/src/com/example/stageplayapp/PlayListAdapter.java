@@ -113,6 +113,14 @@ public View getView(int position,View row,ViewGroup parent){
 					StagePlayDbHelper dbHelper = new StagePlayDbHelper(context);
 					dbHelper.deletePlay(tag.getId());
 					
+					String last_playID = SharedPreferenceHelper.readString(context,
+		    				SharedPreferenceHelper.PLAY_ID, null);
+					
+					if((last_playID!=null)&&(last_playID.equals(tag.getId())))
+					{
+						SharedPreferenceHelper.writeString(context, SharedPreferenceHelper.PLAY_ID, null);
+					}
+					
 					data.remove(tag);
 					notifyDataSetChanged();
 				}
