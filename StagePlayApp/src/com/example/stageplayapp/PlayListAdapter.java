@@ -1,6 +1,7 @@
 package com.example.stageplayapp;
 import java.util.*;
 
+import com.example.stageplayapp.helpers.SharedPreferenceHelper;
 import com.example.stageplayapp.helpers.StagePlayDbHelper;
 import com.example.stageplayapp.models.PlayConfig;
 import com.example.stageplayapp.PlayDetailsActivity;
@@ -46,13 +47,24 @@ public View getView(int position,View row,ViewGroup parent){
         tv_title = (TextView)row.findViewById(R.id.tv_title);
         tv_author = (TextView)row.findViewById(R.id.tv_author);
         tv_genre_and_lang = (TextView)row.findViewById(R.id.tv_genre_and_lang);
+        
         if(data!=null && data.size()>position){
     		final PlayConfig playconfig = data.get(position);
+    		String last_playID = SharedPreferenceHelper.readString(context,
+    				SharedPreferenceHelper.PLAY_ID, null);
+            
+    		 if((last_playID!=null) && (last_playID.equals(playconfig.getId())))
+    		 {
+    			 btn_resume.setEnabled(true);
+    		 }
+    		 else
+    		 {
+    			 btn_resume.setEnabled(false);
+    		 }
+    		 
     		tv_title.setText(playconfig.getName());
     		tv_author.setText(playconfig.getAuthor());
     		    		
-    		//TODO: Only enable Resume button if item is resumable
-    		
     		
     		String other = playconfig.getGenre() + " • " + playconfig.getLanguage();
     		tv_genre_and_lang.setText(other);
@@ -60,6 +72,7 @@ public View getView(int position,View row,ViewGroup parent){
     		btn_details.setTag(playconfig);
     		btn_play.setTag(playconfig);
     		btn_delete.setTag(playconfig);
+    		btn_resume.setTag(playconfig);
     		
     		btn_details.setOnClickListener(new View.OnClickListener(){
     			@Override public void onClick(View v){
@@ -80,10 +93,12 @@ public View getView(int position,View row,ViewGroup parent){
     		
     		btn_resume.setOnClickListener(new View.OnClickListener(){
     			@Override public void onClick(View v){
+    				int dialogueId = SharedPreferenceHelper.readInteger(context,
+    						SharedPreferenceHelper.DIALOGUE_ID, 1);
     				Intent i = new Intent(context, PlayWatchActivity.class);
     				PlayConfig tag = (PlayConfig)v.getTag();
     				i.putExtra(PlayWatchActivity.PARCELSTRING_PLAYID_TO_PLAY, tag.getId());
-    				//TODO: Pass along the dialogueId where to resume from
+    				i.putExtra(PlayWatchActivity.PARCELSTRING_DIALOGUEID_TO_RESUME, dialogueId);
     				context.startActivity(i);
     			}
     		});
