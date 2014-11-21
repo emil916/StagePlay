@@ -94,7 +94,7 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/watch_btnplay_text"
         android:scaleType="centerCrop"
-        android:src="@drawable/play" />
+        android:src="@drawable/pause" />
 
     <ImageButton
         android:id="@+id/imageButton_next"

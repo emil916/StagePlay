@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -44,6 +45,21 @@ public class PlayWatchActivity extends Activity{
 	ImageView imageView;
 	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
+	
+	boolean isPlaying = true;
+	Handler handler = new Handler();
+	Runnable runnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (playDirector.hasNext()) {
+				playDirector.moveToNextDialogue();
+				render();
+				
+				handler.postDelayed(this, 5000);
+			} 
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -71,8 +87,10 @@ public class PlayWatchActivity extends Activity{
 		//NOTE: This HAS to be set on image view to render pictures
 		//imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
 		
-		render();
+//		render();
 		init_listeners();
+		
+		handler.post(runnable);
 	}
 	
 	private void render() {
@@ -141,6 +159,10 @@ public class PlayWatchActivity extends Activity{
 				if (playDirector.hasNext()) {
 					playDirector.moveToNextDialogue();
 					render();
+					if (isPlaying) {
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 5000);
+					}
 				}
 		    }
 			
@@ -149,6 +171,10 @@ public class PlayWatchActivity extends Activity{
 				if (playDirector.hasPrevious()) {
 					playDirector.moveToPreviousDialogue();
 					render();
+					if (isPlaying) {
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 5000);
+					}
 				}
 		    }
 		});
@@ -159,6 +185,10 @@ public class PlayWatchActivity extends Activity{
 				if (playDirector.hasPrevious()) {
 					playDirector.moveToPreviousDialogue();
 					render();
+					if (isPlaying) {
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 5000);
+					}
 				}
 			}
 		});
@@ -166,7 +196,15 @@ public class PlayWatchActivity extends Activity{
 		im_play.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				if(isPlaying){
+					handler.removeCallbacks(runnable);
+					im_play.setImageResource(R.drawable.play);
+					isPlaying = false;
+				}else {
+					handler.postDelayed(runnable, 5000);
+					im_play.setImageResource(R.drawable.pause);
+					isPlaying = true;
+				}
 			}
 		});
 		
@@ -176,6 +214,10 @@ public class PlayWatchActivity extends Activity{
 				if (playDirector.hasNext()) {
 					playDirector.moveToNextDialogue();
 					render();
+					if (isPlaying) {
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 5000);
+					}
 				} 
 			}
 		});
@@ -185,7 +227,18 @@ public class PlayWatchActivity extends Activity{
 	@Override
 	public void onPause() {
 		super.onPause();
+		handler.removeCallbacks(runnable);
 		savePrefs();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(isPlaying) {
+			render();
+			handler.removeCallbacks(runnable);
+			handler.postDelayed(runnable, 5000);
+		}
 	}
 	
 	/** Called when to save the current field values into SharedPrefences. */
