@@ -1,9 +1,9 @@
 package com.example.stageplayapp;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,20 +11,14 @@ import android.graphics.Paint.Style;
 import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.MotionEventCompat;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,7 +26,6 @@ import com.example.stageplayapp.helpers.OnSwipeTouchListener;
 import com.example.stageplayapp.helpers.PlayDirector;
 import com.example.stageplayapp.helpers.SharedPreferenceHelper;
 import com.example.stageplayapp.models.Dialogue;
-import com.example.stageplayapp.models.PlayConfig;
 
 public class PlayWatchActivity extends Activity{
 	public static final String TAG = "PlayWatchActivity";
@@ -46,7 +39,9 @@ public class PlayWatchActivity extends Activity{
 	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
 	
+	long transitionTime;
 	boolean isPlaying = true;
+	
 	Handler handler = new Handler();
 	Runnable runnable = new Runnable() {
 		
@@ -56,7 +51,7 @@ public class PlayWatchActivity extends Activity{
 				playDirector.moveToNextDialogue();
 				render();
 				
-				handler.postDelayed(this, 5000);
+				handler.postDelayed(this, transitionTime);
 			} 
 		}
 	};
@@ -161,7 +156,7 @@ public class PlayWatchActivity extends Activity{
 					render();
 					if (isPlaying) {
 						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 5000);
+						handler.postDelayed(runnable, transitionTime);
 					}
 				}
 		    }
@@ -173,7 +168,7 @@ public class PlayWatchActivity extends Activity{
 					render();
 					if (isPlaying) {
 						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 5000);
+						handler.postDelayed(runnable, transitionTime);
 					}
 				}
 		    }
@@ -187,7 +182,7 @@ public class PlayWatchActivity extends Activity{
 					render();
 					if (isPlaying) {
 						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 5000);
+						handler.postDelayed(runnable, transitionTime);
 					}
 				}
 			}
@@ -201,7 +196,7 @@ public class PlayWatchActivity extends Activity{
 					im_play.setImageResource(R.drawable.play);
 					isPlaying = false;
 				}else {
-					handler.postDelayed(runnable, 5000);
+					handler.postDelayed(runnable, transitionTime);
 					im_play.setImageResource(R.drawable.pause);
 					isPlaying = true;
 				}
@@ -216,7 +211,7 @@ public class PlayWatchActivity extends Activity{
 					render();
 					if (isPlaying) {
 						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 5000);
+						handler.postDelayed(runnable, transitionTime);
 					}
 				} 
 			}
@@ -234,10 +229,21 @@ public class PlayWatchActivity extends Activity{
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(isPlaying) {
-			render();
+		SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+
+		boolean isSlideshowOn = sharedPrefs.getBoolean("prefSlideshowMode", true);
+		if(!isSlideshowOn) {
 			handler.removeCallbacks(runnable);
-			handler.postDelayed(runnable, 5000);
+			im_play.setVisibility(View.INVISIBLE);
+			isPlaying = false;
+		} 
+		
+		render();
+		if(isSlideshowOn && isPlaying) {
+			transitionTime = Long.parseLong(sharedPrefs.getString("prefTransitionTime", "5000"));
+			handler.removeCallbacks(runnable);
+			handler.postDelayed(runnable, transitionTime);
 		}
 	}
 	

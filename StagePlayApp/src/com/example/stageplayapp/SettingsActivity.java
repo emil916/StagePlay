@@ -2,6 +2,7 @@ package com.example.stageplayapp;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -10,6 +11,19 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+public class SettingsActivity extends PreferenceActivity {
+	 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        addPreferencesFromResource(R.xml.settings);
+ 
+    }
+}
+
+
+/*
 public class SettingsActivity extends Activity {
 		ToggleButton toggle;
 		RadioGroup radioGroup;
@@ -52,3 +66,4 @@ public class SettingsActivity extends Activity {
 			});
 }
 }
+*/

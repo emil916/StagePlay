@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/menu_settings" >
+        <SwitchPreference
+            android:disableDependentsState="false"
+            android:key="prefSlideshowMode"
+            android:summaryOff="@string/pref_slideshow_off"
+            android:summaryOn="@string/pref_slideshow_on"
+            android:title="@string/pref_slideshow"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:entries="@array/transitionTime"
+            android:entryValues="@array/transitionTimeValues"
+            android:key="prefTransitionTime"
+            android:summary="@string/pref_transition_time_summary"
+            android:title="@string/pref_transition_time" 
+            android:dependency="prefSlideshowMode"
+            android:defaultValue="5000"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

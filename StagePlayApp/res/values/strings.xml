@@ -26,4 +26,12 @@
 	<string name="watch_btnplay_text">Play</string>
 	<string name="watch_btnnext_text">Next</string>
 	<string name="current_library_items">"Library Items: "</string>
+	
+
+    <string name="menu_settings">Settings</string>
+    <string name="pref_slideshow">Slideshow mode</string>
+    <string name="pref_slideshow_on">On</string>
+    <string name="pref_slideshow_off">Off</string>
+    <string name="pref_transition_time">Transition time</string>
+    <string name="pref_transition_time_summary">Set the slideshow transition time</string>
 </resources>

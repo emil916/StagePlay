@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void startSettingsActivity() {
-		Intent i = new Intent (this,SettingsActivity.class);
+		Intent i = new Intent (this, SettingsActivity.class);
 		startActivity(i);
 	}
 
