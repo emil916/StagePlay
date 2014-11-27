@@ -15,7 +15,7 @@
         android:visibility="gone" >
 
         <ImageView
-            android:id="@+id/imageView_scopeTop"
+            android:id="@+id/imageView_bracketTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -23,7 +23,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bracket1" />
+            android:src="?attr/imageBracketTop" />
 
         <ImageView
             android:id="@+id/imageView_scopeBottom"
@@ -34,7 +34,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bracket2" />
+            android:src="?attr/imageBracketDown" />
 
         <TextView
             android:id="@+id/tv_wp_narrative"
@@ -45,6 +45,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:gravity="center"
+            android:textColor="?attr/textColor"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
@@ -63,6 +64,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_weight="0.4"
+            android:textColor="?attr/textColor"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
@@ -84,7 +86,7 @@
         android:layout_marginStart="40dp"
         android:contentDescription="@string/watch_btnprev_text"
         android:scaleType="centerCrop"
-        android:src="@drawable/prev" />
+        android:src="?attr/imagePrev" />
 
     <ImageButton
         android:id="@+id/imageButton_play"
@@ -94,7 +96,7 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/watch_btnplay_text"
         android:scaleType="centerCrop"
-        android:src="@drawable/pause" />
+        android:src="?attr/imagePause" />
 
     <ImageButton
         android:id="@+id/imageButton_next"
@@ -107,6 +109,6 @@
         android:layout_marginEnd="40dp"
         android:contentDescription="@string/watch_btnnext_text"
         android:scaleType="centerCrop"
-        android:src="@drawable/next" />
+        android:src="?attr/imageNext" />
 
 </RelativeLayout>

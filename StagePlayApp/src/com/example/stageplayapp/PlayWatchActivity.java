@@ -41,6 +41,7 @@ public class PlayWatchActivity extends Activity{
 	
 	long transitionTime;
 	boolean isPlaying = true;
+	boolean isNightMode = false;
 	
 	Handler handler = new Handler();
 	Runnable runnable = new Runnable() {
@@ -62,6 +63,13 @@ public class PlayWatchActivity extends Activity{
 		// Programmatically hide the title bar
 //	     requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		getActionBar().hide();
+		
+		SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+		
+		isNightMode = sharedPrefs.getBoolean("prefNightMode", false);
+		this.setTheme(isNightMode ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
+		
 		setContentView(R.layout.activity_watchplay);
 		
 		String playId = getIntent().getStringExtra(PARCELSTRING_PLAYID_TO_PLAY);
@@ -104,7 +112,7 @@ public class PlayWatchActivity extends Activity{
 				c.drawPicture(pic, new Rect(width, 0, width * 2, height));
 				// c.drawBitmap(bm, 0, 0, null);
 				Paint paint = new Paint();
-				paint.setColor(Color.BLACK);
+				paint.setColor(isNightMode ? Color.WHITE : Color.BLACK);
 				paint.setStyle(Style.FILL);
 				paint.setTypeface(Typeface.create(Typeface.DEFAULT,	Typeface.BOLD_ITALIC));
 				paint.setTextSize(60);
@@ -193,11 +201,13 @@ public class PlayWatchActivity extends Activity{
 			public void onClick(View v) {
 				if(isPlaying){
 					handler.removeCallbacks(runnable);
-					im_play.setImageResource(R.drawable.play);
+					im_play.setImageResource(isNightMode ? 
+							R.drawable.play_night : R.drawable.play);
 					isPlaying = false;
 				}else {
 					handler.postDelayed(runnable, transitionTime);
-					im_play.setImageResource(R.drawable.pause);
+					im_play.setImageResource(isNightMode ? 
+							R.drawable.pause_night : R.drawable.pause);
 					isPlaying = true;
 				}
 			}

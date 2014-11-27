@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/menu_settings" >
+    <PreferenceCategory android:title="@string/slideshow_settings" >
         <SwitchPreference
+            android:defaultValue="true"
             android:disableDependentsState="false"
             android:key="prefSlideshowMode"
             android:summaryOff="@string/pref_slideshow_off"
             android:summaryOn="@string/pref_slideshow_on"
-            android:title="@string/pref_slideshow"
-            android:defaultValue="true" />
+            android:title="@string/pref_slideshow" />
 
         <ListPreference
+            android:defaultValue="5000"
+            android:dependency="prefSlideshowMode"
             android:entries="@array/transitionTime"
             android:entryValues="@array/transitionTimeValues"
             android:key="prefTransitionTime"
             android:summary="@string/pref_transition_time_summary"
-            android:title="@string/pref_transition_time" 
-            android:dependency="prefSlideshowMode"
-            android:defaultValue="5000"/>
+            android:title="@string/pref_transition_time" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/other_settings" >
+        <CheckBoxPreference android:title="@string/pref_night_mode" android:key="prefNightMode"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

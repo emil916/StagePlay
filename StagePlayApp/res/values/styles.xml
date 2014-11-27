@@ -17,8 +17,30 @@
     <style name="AppTheme" parent="AppBaseTheme">
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        
+         <!--item name="android:windowActionBar">false</item-->
         <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="AppTheme.Light" parent="AppTheme">
+        <item name="android:background">@color/background_light</item>
+        <item name="imageBracketTop">@drawable/bracket_top</item>
+        <item name="imageBracketDown">@drawable/bracket_down</item>
+        <item name="imageNext">@drawable/next</item>
+        <item name="imagePrev">@drawable/prev</item>
+        <item name="imagePlay">@drawable/play</item>
+        <item name="imagePause">@drawable/pause</item>
+        <item name="textColor">@android:color/black</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="AppTheme">
+        <item name="android:background">@color/background_dark</item>
+        <item name="imageBracketTop">@drawable/bracket_top_night</item>
+        <item name="imageBracketDown">@drawable/bracket_down_night</item>
+        <item name="imageNext">@drawable/next_night</item>
+        <item name="imagePrev">@drawable/prev_night</item>
+        <item name="imagePlay">@drawable/play_night</item>
+        <item name="imagePause">@drawable/pause_night</item>
+        <item name="textColor">@android:color/white</item>
     </style>
 
 </resources>
