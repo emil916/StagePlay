@@ -174,7 +174,7 @@ public class PlayDirector {
 					String imageText = new String(deckImage.getImage());
 					for(ActorColor actorColorItem : actorColorSet)
 					{
-						imageText.replace(actorColorItem.getReplace(), actorColorItem.getReplaceWith());
+						imageText = imageText.replace(actorColorItem.getReplace(), actorColorItem.getReplaceWith());
 					}
 					
 					try {
