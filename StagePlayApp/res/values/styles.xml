@@ -50,7 +50,7 @@
         <item name="imagePause">@drawable/pause_night</item>
         <item name="textColor">@android:color/white</item>
     </style>
-
+ 
     <style name="MyDialogTheme.Light" parent="@android:style/Theme.Holo.Dialog">
         <item name="android:textColor">@android:color/black</item>
     </style>
