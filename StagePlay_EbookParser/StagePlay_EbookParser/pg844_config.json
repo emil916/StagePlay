@@ -11,16 +11,129 @@
 	"actors": {
 		"actor": [
 				{
-					"id": "ALGERNON.",
+					"id": "LANE.",
+					"deck": {
+						"image": [
+								"Anonymous_blueman_101.svg",
+								"Anonymous_blueman_102.svg",
+								"Anonymous_blueman_103.svg",
+								"Anonymous_blueman_105.svg",
+								"Anonymous_blueman_106.svg",
+								"Anonymous_blueman_107.svg",
+								"Anonymous_blueman_108.svg",
+								"Anonymous_blueman_109.svg"
+						]
+					}
+				},
+				{
+					"id": "JACK.",
+					"deck": {
+						"image": [
+								"Anonymous_blueman_201.svg",
+								"Anonymous_blueman_202.svg",
+								"Anonymous_blueman_203.svg",
+								"Anonymous_blueman_204.svg",
+								"Anonymous_blueman_206.svg",
+								"Anonymous_blueman_208.svg",
+								"Anonymous_blueman_210.svg",
+								"Anonymous_blueman_212.svg"
+						]
+					},
+					"colors": {
+						"color": [
+							{
+								"replace": "#0066cc",
+								"replaceWith": "#FFBF00"
+							}
+						]
+					}
+				},
+				{
+					"id": "LADY BRACKNELL.",
 					"colors": {
 						"color": [
 							{
 								"replace": "#02e2ff",
-								"replaceWith": "#FF7959"
+								"replaceWith": "#BEF781"								
 							},
 							{
 								"replace": "#0079a8",
-								"replaceWith": "#B91400"
+								"replaceWith": "#4b8a08"
+							}
+						]
+					}
+				},
+				{
+					"id": "GWENDOLEN.",
+					"colors": {
+						"color": [
+							{
+								"replace": "#02e2ff",
+								"replaceWith": "#a9f5a9"
+							},
+							{
+								"replace": "#0079a8",
+								"replaceWith": "#00ff00"								
+							}
+						]
+					}
+				},
+				{
+					"id": "MISS PRISM.",
+					"colors": {
+						"color": [
+							{
+								"replace": "#02e2ff",
+								"replaceWith": "#e6e6e6"
+							},
+							{
+								"replace": "#0079a8",
+								"replaceWith": "#424242"
+							}
+						]
+					}
+				},
+				{
+					"id": "CECILY.",
+					"colors": {
+						"color": [
+							{
+								"replace": "#02e2ff",
+								"replaceWith": "#f5a9f2"
+							},
+							{
+								"replace": "#0079a8",
+								"replaceWith": "#ff00ff"
+							}
+						]
+					}
+				},
+				{
+					"id": "CHASUBLE.",
+					"colors": {
+						"color": [
+							{
+								"replace": "#02e2ff",
+								"replaceWith": "#e2a9f3"
+							},
+							{
+								"replace": "#0079a8",
+								"replaceWith": "#6a0888"
+							}
+						]
+					}
+				},
+				{
+					"id": "MERRIMAN.",
+					"colors": {
+						"color": [
+							{
+								"replace": "#02e2ff",
+								"replaceWith": "#e6e6e6"
+							},
+							{
+								"replace": "#0079a8",
+								"replaceWith": "#a4a4a4"
 							}
 						]
 					}
