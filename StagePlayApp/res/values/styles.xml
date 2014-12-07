@@ -28,7 +28,7 @@
         <item name="imagePause">@drawable/pause</item>
         <item name="textColor">@android:color/black</item>
     </style>
-    
+     
     <style name="AppTheme.Light" parent="AppTheme">
         <item name="android:background">@color/background_light</item>
         <item name="imageBracketTop">@drawable/bracket_top</item>
