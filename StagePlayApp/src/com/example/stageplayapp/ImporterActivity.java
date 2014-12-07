@@ -126,7 +126,6 @@ public class ImporterActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			iv = (ImageView)findViewById(R.id.imageView1);
-		    new ProgressDialog(ImporterActivity.this);
 		    mDialog = ProgressDialog.show(ImporterActivity.this, "", "Extracting zip..");
 		    super.onPreExecute();
 		}
@@ -166,7 +165,7 @@ public class ImporterActivity extends Activity {
 	        }else if (result == 2) {
 	        	iv.setImageResource(R.drawable.error);
 	        	tv_info.setText("Something went wrong when pulling"
-	        			+ "data from the ZIP file :(");
+	        			+ " data from the ZIP file :(");
 	        }
 	        else {
 	        	new MyAsynchTaskToDB().execute();

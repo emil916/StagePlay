@@ -19,6 +19,14 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
          <!--item name="android:windowActionBar">false</item-->
         <item name="android:windowNoTitle">true</item>
+        
+        <item name="imageBracketTop">@drawable/bracket_top</item>
+        <item name="imageBracketDown">@drawable/bracket_down</item>
+        <item name="imageNext">@drawable/next</item>
+        <item name="imagePrev">@drawable/prev</item>
+        <item name="imagePlay">@drawable/play</item>
+        <item name="imagePause">@drawable/pause</item>
+        <item name="textColor">@android:color/black</item>
     </style>
     
     <style name="AppTheme.Light" parent="AppTheme">

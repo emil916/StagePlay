@@ -247,6 +247,10 @@ public class PlayDirector {
 		return currDialogueId < maxDialogueIdForPlay;
 	}
 	
+	public int getMaxDialogueId() {
+		return maxDialogueIdForPlay;
+	}
+	
 	public Dialogue getCurrentDialogue()
 	{
 		return dialogues.get(currDialogueId);

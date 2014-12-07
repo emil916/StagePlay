@@ -1,6 +1,7 @@
 package com.example.stageplayapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,6 +12,8 @@ import android.graphics.Paint.Style;
 import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -19,12 +22,18 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+
+
+
 
 import com.example.stageplayapp.helpers.OnSwipeTouchListener;
 import com.example.stageplayapp.helpers.PlayDirector;
 import com.example.stageplayapp.helpers.SharedPreferenceHelper;
+import com.example.stageplayapp.helpers.StagePlayDbHelper;
 import com.example.stageplayapp.models.Dialogue;
 
 public class PlayWatchActivity extends Activity{
@@ -38,8 +47,11 @@ public class PlayWatchActivity extends Activity{
 	ImageView imageView;
 	ImageButton im_prev, im_play, im_next;
 	PlayDirector playDirector;
+	AsyncTask<String, Void, Integer> myTask = null;
+	ProgressBar progressBar;
 	
 	long transitionTime;
+	boolean isSlideshowOn;
 	boolean isPlaying = true;
 	boolean isNightMode = false;
 	
@@ -57,7 +69,7 @@ public class PlayWatchActivity extends Activity{
 		}
 	};
 
-	@Override
+	@Override 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		// Programmatically hide the title bar
@@ -74,8 +86,7 @@ public class PlayWatchActivity extends Activity{
 		
 		String playId = getIntent().getStringExtra(PARCELSTRING_PLAYID_TO_PLAY);
 		int dialogueId = getIntent().getIntExtra(PARCELSTRING_DIALOGUEID_TO_RESUME, 1);
-		playDirector = new PlayDirector(this, playId, dialogueId);
-		
+	
 		tv_dialogue = (TextView)findViewById(R.id.tv_wp_dialogue);
 		
 		im_prev = (ImageButton)findViewById(R.id.imageButton_prev);
@@ -87,14 +98,16 @@ public class PlayWatchActivity extends Activity{
 		layout_main = (RelativeLayout)findViewById(R.id.RelativeLayout_wp);
 		
 		imageView = (ImageView)findViewById(R.id.imageView_stickfigure);
-		//NOTE: This HAS to be set on image view to render pictures
-		//imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); 
+		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		
-//		render();
+		isSlideshowOn = sharedPrefs.getBoolean("prefSlideshowMode", true);
+		transitionTime = Long.parseLong(sharedPrefs.getString("prefTransitionTime", "5000"));
+		
 		init_listeners();
 		
-		handler.post(runnable);
+		myTask = new MyAsynchTask().execute(playId, Integer.toString(dialogueId));
 	}
+	
 	
 	private void render() {
 		Dialogue currDialogue = playDirector.getCurrentDialogue();
@@ -103,14 +116,11 @@ public class PlayWatchActivity extends Activity{
 			layoutDialogue.setVisibility(View.VISIBLE);
 			Picture pic = playDirector.getCurrentPicture();
 			if (pic != null) {
-				// Drawable drawable = new PictureDrawable(pic);
-
 				int width = pic.getWidth();
 				int height = pic.getHeight();
 				Bitmap newImage = Bitmap.createBitmap(width * 2, height, Config.ARGB_8888);
 				Canvas c = new Canvas(newImage);
 				c.drawPicture(pic, new Rect(width, 0, width * 2, height));
-				// c.drawBitmap(bm, 0, 0, null);
 				Paint paint = new Paint();
 				paint.setColor(isNightMode ? Color.WHITE : Color.BLACK);
 				paint.setStyle(Style.FILL);
@@ -119,23 +129,6 @@ public class PlayWatchActivity extends Activity{
 				c.drawText(playDirector.getCurrentDialogue().getActorName(), 20, 200, paint);
 
 				imageView.setImageBitmap(newImage);
-//				imageView.setImageDrawable(drawable);
-				
-				/*
-				  Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bg_main);
-				  Config config = bm.getConfig();
-					int width = bm.getWidth();
-					int height = bm.getHeight();
-					Bitmap newImage = Bitmap.createBitmap(width, height, config);
-					Canvas c = new Canvas(newImage);
-					c.drawBitmap(bm, 0, 0, null);
-					Paint paint = new Paint();
-					paint.setColor(Color.YELLOW);
-					paint.setStyle(Style.FILL);
-					paint.setTextSize(200);
-					c.drawText(playDirector.getCurrentDialogue().getActorName(), 0, 250, paint);
-					imageView.setImageBitmap(newImage);
-				 */
 			}
 			
 			// Display dialogue text
@@ -149,9 +142,10 @@ public class PlayWatchActivity extends Activity{
 			textViewNarrative.setText(currDialogue.getText());
 		}
 		
+		updateProgress(currDialogue.getDialogueId(), playDirector.getMaxDialogueId());
 		// Enable/Disable navigation buttons
-			im_next.setEnabled(playDirector.hasNext());
-			im_prev.setEnabled(playDirector.hasPrevious());
+		im_next.setEnabled(playDirector.hasNext());
+		im_prev.setEnabled(playDirector.hasPrevious());
 	}
 	
 	private void init_listeners() {
@@ -233,25 +227,23 @@ public class PlayWatchActivity extends Activity{
 	public void onPause() {
 		super.onPause();
 		handler.removeCallbacks(runnable);
+		if(myTask != null && myTask.getStatus()==Status.RUNNING)
+			myTask.cancel(true);
 		savePrefs();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		SharedPreferences sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-
-		boolean isSlideshowOn = sharedPrefs.getBoolean("prefSlideshowMode", true);
+		
 		if(!isSlideshowOn) {
 			handler.removeCallbacks(runnable);
 			im_play.setVisibility(View.INVISIBLE);
 			isPlaying = false;
 		} 
 		
-		render();
-		if(isSlideshowOn && isPlaying) {
-			transitionTime = Long.parseLong(sharedPrefs.getString("prefTransitionTime", "5000"));
+//		render();
+		if(myTask != null && myTask.getStatus() == Status.FINISHED && isSlideshowOn && isPlaying) {
 			handler.removeCallbacks(runnable);
 			handler.postDelayed(runnable, transitionTime);
 		}
@@ -273,6 +265,39 @@ public class PlayWatchActivity extends Activity{
 
 	}
 	
+	private class MyAsynchTask extends AsyncTask<String, Void, Integer> {
+		private ProgressDialog mDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			new ProgressDialog(PlayWatchActivity.this);
+		    mDialog = ProgressDialog.show(PlayWatchActivity.this, "", "Please wait...");
+		}
+		
+		@Override
+		protected Integer doInBackground(String... params) {
+			int dialogueId = Integer.parseInt(params[1]);
+			playDirector = new PlayDirector(PlayWatchActivity.this, params[0], 
+					dialogueId);
+	        updateProgress(dialogueId, playDirector.getMaxDialogueId());
+			return 0;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) { 
+			super.onPostExecute(result);
+			render();
+	        if(mDialog!=null && mDialog.isShowing()) {
+	            mDialog.dismiss();
+	        }
 
+	        if(isSlideshowOn)
+	        	handler.postDelayed(runnable, transitionTime);
+		}
+	}
 	
+	private void updateProgress(int cur, int max) {
+		progressBar.setProgress((int) (100*(cur*1.0/max)));
+	}
 }
