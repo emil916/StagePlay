@@ -272,7 +272,11 @@ public class PlayWatchActivity extends Activity{
 		protected void onPreExecute() {
 			super.onPreExecute();
 			new ProgressDialog(PlayWatchActivity.this);
-		    mDialog = ProgressDialog.show(PlayWatchActivity.this, "", "Please wait...");
+			mDialog = new ProgressDialog(PlayWatchActivity.this, 
+					isNightMode ? R.style.MyDialogTheme_Dark 
+							: R.style.MyDialogTheme_Light);
+			mDialog.setMessage("Please wait...");
+			mDialog.show();
 		}
 		
 		@Override
