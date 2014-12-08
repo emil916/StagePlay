@@ -6,7 +6,6 @@ public class Actor {
 
 	private String playId;
 	private String name;
-	ArrayList<DeckImage> deck;
 	
 	public Actor()
 	{
@@ -27,15 +26,5 @@ public class Actor {
 	public void setName(String name){
 		this.name = name;
 	}
-	
-	public ArrayList<DeckImage> getDeck()
-	{
-		return this.deck;
-	}
-	
-	public void setDeck(ArrayList<DeckImage> deck)
-	{
-		this.deck = deck;
-	}
-	
+		
 }
